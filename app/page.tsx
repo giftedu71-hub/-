@@ -89,7 +89,7 @@ const results: Record<
   quiet: {
     name: "여유로운 해달형",
     beach: "임랑해수욕장 · 일광해수욕장",
-    icon: "🦦",
+    icon: "",
     iconLabel: "편안하게 누워 있는 해달",
     description:
       "사람이 적고 조용한 바다에서 편안하게 쉬는 것을 좋아하며, 화려한 시설보다 한적함과 여유를 중요하게 생각하는 유형이에요.",
@@ -147,6 +147,8 @@ const mapBeaches: Array<{
   shortName: string;
   title: string;
   note: string;
+  atmosphere: string;
+  crowd: number;
   position: string;
 }> = [
   {
@@ -154,6 +156,8 @@ const mapBeaches: Array<{
     shortName: "임랑·일광",
     title: "임랑·일광",
     note: "한적한 쉼과 잔잔한 바다",
+    atmosphere: "조용하고 소박한 분위기",
+    crowd: 1,
     position: "marker-quiet",
   },
   {
@@ -161,6 +165,8 @@ const mapBeaches: Array<{
     shortName: "송정",
     title: "송정해수욕장",
     note: "서핑과 자유로운 레저",
+    atmosphere: "자유롭고 역동적인 분위기",
+    crowd: 4,
     position: "marker-songjeong",
   },
   {
@@ -168,6 +174,8 @@ const mapBeaches: Array<{
     shortName: "해운대",
     title: "해운대해수욕장",
     note: "부산을 대표하는 활기찬 관광지",
+    atmosphere: "활기차고 화려한 분위기",
+    crowd: 6,
     position: "marker-haeundae",
   },
   {
@@ -175,6 +183,8 @@ const mapBeaches: Array<{
     shortName: "광안리",
     title: "광안리해수욕장",
     note: "광안대교 야경과 감성적인 카페",
+    atmosphere: "젊고 낭만적인 분위기",
+    crowd: 5,
     position: "marker-gwangalli",
   },
   {
@@ -182,6 +192,8 @@ const mapBeaches: Array<{
     shortName: "송도",
     title: "송도해수욕장",
     note: "바다와 관광시설의 균형",
+    atmosphere: "편안하고 가족 친화적인 분위기",
+    crowd: 3,
     position: "marker-songdo",
   },
   {
@@ -189,6 +201,8 @@ const mapBeaches: Array<{
     shortName: "다대포",
     title: "다대포해수욕장",
     note: "넓은 모래사장과 아름다운 노을",
+    atmosphere: "감성적이고 여유로운 분위기",
+    crowd: 2,
     position: "marker-dadaepo",
   },
 ];
@@ -306,6 +320,8 @@ export default function Home() {
   const [selectedMapBeach, setSelectedMapBeach] = useState<BeachKey>("haeundae");
   const headingRef = useRef<HTMLHeadingElement>(null);
   const result = showResult ? calculateResult(answers) : null;
+  const activeMapBeach =
+    mapBeaches.find((beach) => beach.key === selectedMapBeach) ?? mapBeaches[0];
   const question = questions[step];
   const selected = answers[step];
 
@@ -393,11 +409,33 @@ export default function Home() {
             </div>
 
             <aside className="map-panel">
-              <p>지금 보고 있는 바다</p>
-              <h2>{mapBeaches.find((beach) => beach.key === selectedMapBeach)?.title}</h2>
-              <span className="map-note">
-                {mapBeaches.find((beach) => beach.key === selectedMapBeach)?.note}
-              </span>
+              <div className="selected-beach-card" key={activeMapBeach.key} aria-live="polite">
+                <p>선택한 해수욕장</p>
+                <h2>{activeMapBeach.title}</h2>
+                <span className="map-note">{activeMapBeach.note}</span>
+
+                <dl className="beach-details">
+                  <div>
+                    <dt>분위기</dt>
+                    <dd>{activeMapBeach.atmosphere}</dd>
+                  </div>
+                  <div className="crowd-detail">
+                    <dt>혼잡도</dt>
+                    <dd
+                      className="crowd-dots"
+                      aria-label={`혼잡도 6단계 중 ${activeMapBeach.crowd}단계`}
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <i
+                          key={index}
+                          className={index < activeMapBeach.crowd ? "filled" : ""}
+                          aria-hidden="true"
+                        />
+                      ))}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
               <div className="map-beach-list" aria-label="해수욕장 선택">
                 {mapBeaches.map((beach) => (
                   <button
@@ -504,7 +542,7 @@ export default function Home() {
                 {results[result.key].name}
               </h1>
               <div
-                className={`result-icon result-icon-${result.key} ${result.key === "quiet" ? "" : "sprite-icon"}`}
+                className={`result-icon result-icon-${result.key} sprite-icon`}
                 role="img"
                 aria-label={results[result.key].iconLabel}
               >

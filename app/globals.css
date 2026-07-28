@@ -436,31 +436,44 @@ button:focus-visible,
 }
 
 .sprite-icon {
+  overflow: hidden;
   background-color: color-mix(in srgb, var(--accent) 10%, white);
-  background-image: url("/og.png");
-  background-repeat: no-repeat;
-  background-size: 750px 412px;
+  background-image: none;
   font-size: 0;
 }
 
-.result-icon-dadaepo {
-  background-position: 0 -164px;
+.sprite-icon::before {
+  display: block;
+  width: 100px;
+  height: 150px;
+  content: "";
+  background-image: url("/og.png");
+  background-repeat: no-repeat;
+  background-size: 600px 400px;
 }
 
-.result-icon-songdo {
-  background-position: -150px -164px;
+.result-icon-quiet::before {
+  background-position: 0 -185px;
 }
 
-.result-icon-songjeong {
-  background-position: -300px -164px;
+.result-icon-dadaepo::before {
+  background-position: -100px -190px;
 }
 
-.result-icon-gwangalli {
-  background-position: -450px -164px;
+.result-icon-songdo::before {
+  background-position: -200px -190px;
 }
 
-.result-icon-haeundae {
-  background-position: -600px -164px;
+.result-icon-songjeong::before {
+  background-position: -300px -195px;
+}
+
+.result-icon-gwangalli::before {
+  background-position: -400px -180px;
+}
+
+.result-icon-haeundae::before {
+  background-position: -500px -182px;
 }
 
 @keyframes float {
@@ -783,7 +796,28 @@ button:focus-visible,
   padding: 31px 27px 25px;
 }
 
-.map-panel > p {
+.selected-beach-card {
+  padding: 20px;
+  border: 1px solid #dfeae5;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(97, 189, 176, 0.16), transparent 120px),
+    #f7fbf8;
+  animation: card-in 0.28s ease both;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selected-beach-card > p {
   margin: 0 0 7px;
   color: var(--sea);
   font-size: 11px;
@@ -804,9 +838,59 @@ button:focus-visible,
   font-size: 13px;
 }
 
+.beach-details {
+  display: grid;
+  margin: 18px 0 0;
+  gap: 12px;
+}
+
+.beach-details > div {
+  display: flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.beach-details dt {
+  color: #819494;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.beach-details dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.crowd-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crowd-dots i {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid #8fb9b5;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.crowd-dots i.filled {
+  border-color: var(--sea);
+  background: var(--sea);
+  box-shadow: 0 2px 5px rgba(21, 143, 150, 0.18);
+}
+
 .map-beach-list {
   display: grid;
-  margin-top: 28px;
+  margin-top: 20px;
   border-top: 1px solid #e6ece8;
 }
 
@@ -992,27 +1076,37 @@ footer {
   }
 
   .sprite-icon {
-    background-size: 640px 351px;
+    background-image: none;
   }
 
-  .result-icon-dadaepo {
-    background-position: 0 -140px;
+  .sprite-icon::before {
+    width: 96px;
+    height: 128px;
+    background-size: 576px 384px;
   }
 
-  .result-icon-songdo {
-    background-position: -128px -140px;
+  .result-icon-quiet::before {
+    background-position: 0 -177px;
   }
 
-  .result-icon-songjeong {
-    background-position: -256px -140px;
+  .result-icon-dadaepo::before {
+    background-position: -96px -182px;
   }
 
-  .result-icon-gwangalli {
-    background-position: -384px -140px;
+  .result-icon-songdo::before {
+    background-position: -192px -182px;
   }
 
-  .result-icon-haeundae {
-    background-position: -512px -140px;
+  .result-icon-songjeong::before {
+    background-position: -288px -187px;
+  }
+
+  .result-icon-gwangalli::before {
+    background-position: -384px -172px;
+  }
+
+  .result-icon-haeundae::before {
+    background-position: -480px -175px;
   }
 
   .result-description {
@@ -1068,6 +1162,23 @@ footer {
   .map-panel {
     padding: 25px 20px 20px;
     border-radius: 22px;
+  }
+
+  .selected-beach-card {
+    padding: 18px 16px;
+  }
+
+  .beach-details dd {
+    font-size: 11px;
+  }
+
+  .crowd-dots {
+    gap: 5px;
+  }
+
+  .crowd-dots i {
+    width: 10px;
+    height: 10px;
   }
 
   footer {

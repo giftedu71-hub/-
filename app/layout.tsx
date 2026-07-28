@@ -28,9 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: `${origin}/og.png`,
-          width: 1693,
-          height: 929,
-          alt: "부산 해수욕장 성향 테스트와 다섯 바다 동물 유형",
+          width: 1536,
+          height: 1024,
+          alt: "부산 해수욕장 성향 테스트와 여섯 바다 동물 유형",
         },
       ],
     },
