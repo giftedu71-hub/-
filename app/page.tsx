@@ -81,6 +81,7 @@ const results: Record<
     name: string;
     beach: string;
     icon: string;
+    image: string;
     iconLabel: string;
     description: string;
     accent: string;
@@ -90,6 +91,7 @@ const results: Record<
     name: "여유로운 해달형",
     beach: "임랑해수욕장 · 일광해수욕장",
     icon: "",
+    image: "/animals/otter.png",
     iconLabel: "편안하게 누워 있는 해달",
     description:
       "사람이 적고 조용한 바다에서 편안하게 쉬는 것을 좋아하며, 화려한 시설보다 한적함과 여유를 중요하게 생각하는 유형이에요.",
@@ -99,6 +101,7 @@ const results: Record<
     name: "낭만적인 해파리형",
     beach: "다대포해수욕장",
     icon: "",
+    image: "/animals/jellyfish.png",
     iconLabel: "둥둥 떠 있는 해파리",
     description:
       "넓은 해변과 자연 풍경, 노을, 산책을 좋아하며 복잡한 관광지보다 여유로운 분위기를 선호하는 유형이에요.",
@@ -108,6 +111,7 @@ const results: Record<
     name: "알차게 즐기는 해마형",
     beach: "송도해수욕장",
     icon: "",
+    image: "/animals/seahorse.png",
     iconLabel: "카메라를 든 해마",
     description:
       "너무 붐비지도 너무 한적하지도 않은 균형 잡힌 해변을 좋아하며, 관광시설과 편의시설을 함께 이용하고 싶은 유형이에요.",
@@ -117,6 +121,7 @@ const results: Record<
     name: "파도 타는 돌고래형",
     beach: "송정해수욕장",
     icon: "",
+    image: "/animals/dolphin.png",
     iconLabel: "파도를 타는 돌고래",
     description:
       "강한 파도와 서핑, 해양레저 등 활동적인 체험을 좋아하며 자유로운 분위기의 해변을 선호하는 유형이에요.",
@@ -126,6 +131,7 @@ const results: Record<
     name: "감성 타는 가오리형",
     beach: "광안리해수욕장",
     icon: "",
+    image: "/animals/ray.png",
     iconLabel: "반짝이는 바다를 헤엄치는 가오리",
     description:
       "광안대교 야경, 카페, 맛집, 사진 촬영과 젊고 감성적인 분위기를 중요하게 생각하는 유형이에요.",
@@ -135,6 +141,7 @@ const results: Record<
     name: "활기찬 범고래형",
     beach: "해운대해수욕장",
     icon: "",
+    image: "/animals/orca.png",
     iconLabel: "바다 위로 뛰어오르는 범고래",
     description:
       "사람이 많고 활기찬 대표 관광지를 좋아하며, 숙박, 음식점, 쇼핑, 관광시설 등 다양한 즐길 거리가 있는 곳을 선호하는 유형이에요.",
@@ -602,7 +609,7 @@ export default function Home() {
                 role="img"
                 aria-label={results[result.key].iconLabel}
               >
-                {results[result.key].icon}
+                <img src={results[result.key].image} alt="" />
               </div>
               <p className="result-description">{results[result.key].description}</p>
 

@@ -437,44 +437,17 @@ button:focus-visible,
 
 .sprite-icon {
   overflow: hidden;
-  background-color: color-mix(in srgb, var(--accent) 16%, white);
+  background-color: #fff8eb;
   background-image: none;
   font-size: 0;
 }
 
-.sprite-icon::before {
+.sprite-icon img {
   display: block;
-  width: 100px;
-  height: 150px;
-  content: "";
-  background-image: url("/og.png");
-  background-repeat: no-repeat;
-  background-size: 600px 400px;
-  border-radius: 50%;
-}
-
-.result-icon-quiet::before {
-  background-position: 0 -185px;
-}
-
-.result-icon-dadaepo::before {
-  background-position: -100px -190px;
-}
-
-.result-icon-songdo::before {
-  background-position: -200px -190px;
-}
-
-.result-icon-songjeong::before {
-  background-position: -300px -195px;
-}
-
-.result-icon-gwangalli::before {
-  background-position: -400px -180px;
-}
-
-.result-icon-haeundae::before {
-  background-position: -500px -182px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 @keyframes float {
