@@ -98,7 +98,7 @@ const results: Record<
   dadaepo: {
     name: "낭만적인 해파리형",
     beach: "다대포해수욕장",
-    icon: "🪼",
+    icon: "",
     iconLabel: "둥둥 떠 있는 해파리",
     description:
       "넓은 해변과 자연 풍경, 노을, 산책을 좋아하며 복잡한 관광지보다 여유로운 분위기를 선호하는 유형이에요.",
@@ -107,7 +107,7 @@ const results: Record<
   songdo: {
     name: "알차게 즐기는 해마형",
     beach: "송도해수욕장",
-    icon: "🐴📷",
+    icon: "",
     iconLabel: "카메라를 든 해마",
     description:
       "너무 붐비지도 너무 한적하지도 않은 균형 잡힌 해변을 좋아하며, 관광시설과 편의시설을 함께 이용하고 싶은 유형이에요.",
@@ -116,7 +116,7 @@ const results: Record<
   songjeong: {
     name: "파도 타는 돌고래형",
     beach: "송정해수욕장",
-    icon: "🐬🌊",
+    icon: "",
     iconLabel: "파도를 타는 돌고래",
     description:
       "강한 파도와 서핑, 해양레저 등 활동적인 체험을 좋아하며 자유로운 분위기의 해변을 선호하는 유형이에요.",
@@ -125,7 +125,7 @@ const results: Record<
   gwangalli: {
     name: "감성 타는 가오리형",
     beach: "광안리해수욕장",
-    icon: "𓆝 ✨",
+    icon: "",
     iconLabel: "반짝이는 바다를 헤엄치는 가오리",
     description:
       "광안대교 야경, 카페, 맛집, 사진 촬영과 젊고 감성적인 분위기를 중요하게 생각하는 유형이에요.",
@@ -134,13 +134,64 @@ const results: Record<
   haeundae: {
     name: "활기찬 범고래형",
     beach: "해운대해수욕장",
-    icon: "🐋💦",
+    icon: "",
     iconLabel: "바다 위로 뛰어오르는 범고래",
     description:
       "사람이 많고 활기찬 대표 관광지를 좋아하며, 숙박, 음식점, 쇼핑, 관광시설 등 다양한 즐길 거리가 있는 곳을 선호하는 유형이에요.",
     accent: "#e66f69",
   },
 };
+
+const mapBeaches: Array<{
+  key: BeachKey;
+  shortName: string;
+  title: string;
+  note: string;
+  position: string;
+}> = [
+  {
+    key: "quiet",
+    shortName: "임랑·일광",
+    title: "임랑·일광",
+    note: "한적한 쉼과 잔잔한 바다",
+    position: "marker-quiet",
+  },
+  {
+    key: "songjeong",
+    shortName: "송정",
+    title: "송정해수욕장",
+    note: "서핑과 자유로운 레저",
+    position: "marker-songjeong",
+  },
+  {
+    key: "haeundae",
+    shortName: "해운대",
+    title: "해운대해수욕장",
+    note: "부산을 대표하는 활기찬 관광지",
+    position: "marker-haeundae",
+  },
+  {
+    key: "gwangalli",
+    shortName: "광안리",
+    title: "광안리해수욕장",
+    note: "광안대교 야경과 감성적인 카페",
+    position: "marker-gwangalli",
+  },
+  {
+    key: "songdo",
+    shortName: "송도",
+    title: "송도해수욕장",
+    note: "바다와 관광시설의 균형",
+    position: "marker-songdo",
+  },
+  {
+    key: "dadaepo",
+    shortName: "다대포",
+    title: "다대포해수욕장",
+    note: "넓은 모래사장과 아름다운 노을",
+    position: "marker-dadaepo",
+  },
+];
 
 function baseResult(total: number): BeachKey {
   if (total <= 7) return "quiet";
@@ -251,6 +302,8 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResult, setShowResult] = useState(false);
+  const [showMap, setShowMap] = useState(false);
+  const [selectedMapBeach, setSelectedMapBeach] = useState<BeachKey>("haeundae");
   const headingRef = useRef<HTMLHeadingElement>(null);
   const result = showResult ? calculateResult(answers) : null;
   const question = questions[step];
@@ -258,7 +311,7 @@ export default function Home() {
 
   useEffect(() => {
     headingRef.current?.focus();
-  }, [step, showResult]);
+  }, [step, showResult, showMap]);
 
   function choose(value: number) {
     setAnswers((current) => {
@@ -281,6 +334,15 @@ export default function Home() {
     setAnswers([]);
     setStep(0);
     setShowResult(false);
+    setShowMap(false);
+    setSelectedMapBeach("haeundae");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function openMap() {
+    if (result) setSelectedMapBeach(result.key);
+    setShowMap(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -296,7 +358,71 @@ export default function Home() {
         <span>BUSAN BEACH MATCH</span>
       </header>
 
-      {!showResult ? (
+      {showMap ? (
+        <section className="map-screen">
+          <div className="map-heading">
+            <p className="eyebrow">BEACH EXPLORER</p>
+            <h1 ref={headingRef} tabIndex={-1}>
+              다른 부산 바다도
+              <br />
+              둘러볼까요?
+            </h1>
+            <p>지도 위 이름을 누르면 각 해수욕장의 매력을 확인할 수 있어요.</p>
+          </div>
+
+          <div className="map-layout">
+            <div className="busan-map" aria-label="부산 주요 해수욕장 지도">
+              <div className="map-land" aria-hidden="true">
+                <span className="map-river river-one" />
+                <span className="map-river river-two" />
+              </div>
+              <span className="east-sea" aria-hidden="true">동해</span>
+              <span className="south-sea" aria-hidden="true">남해</span>
+              {mapBeaches.map((beach) => (
+                <button
+                  key={beach.key}
+                  type="button"
+                  className={`map-marker ${beach.position} ${selectedMapBeach === beach.key ? "active" : ""}`}
+                  aria-pressed={selectedMapBeach === beach.key}
+                  onClick={() => setSelectedMapBeach(beach.key)}
+                >
+                  <i aria-hidden="true" />
+                  <span>{beach.shortName}</span>
+                </button>
+              ))}
+            </div>
+
+            <aside className="map-panel">
+              <p>지금 보고 있는 바다</p>
+              <h2>{mapBeaches.find((beach) => beach.key === selectedMapBeach)?.title}</h2>
+              <span className="map-note">
+                {mapBeaches.find((beach) => beach.key === selectedMapBeach)?.note}
+              </span>
+              <div className="map-beach-list" aria-label="해수욕장 선택">
+                {mapBeaches.map((beach) => (
+                  <button
+                    key={beach.key}
+                    type="button"
+                    className={selectedMapBeach === beach.key ? "active" : ""}
+                    onClick={() => setSelectedMapBeach(beach.key)}
+                  >
+                    <span>{beach.shortName}</span>
+                    <i aria-hidden="true">→</i>
+                  </button>
+                ))}
+              </div>
+              <div className="map-actions">
+                <button className="map-back-button" type="button" onClick={() => setShowMap(false)}>
+                  ← 결과로 돌아가기
+                </button>
+                <button className="map-restart-button" type="button" onClick={reset}>
+                  처음부터 테스트하기
+                </button>
+              </div>
+            </aside>
+          </div>
+        </section>
+      ) : !showResult ? (
         <section className="quiz-layout">
           <aside className="intro">
             <p className="eyebrow">나와 닮은 부산 바다는?</p>
@@ -377,7 +503,11 @@ export default function Home() {
               <h1 ref={headingRef} tabIndex={-1}>
                 {results[result.key].name}
               </h1>
-              <div className={`result-icon result-icon-${result.key}`} role="img" aria-label={results[result.key].iconLabel}>
+              <div
+                className={`result-icon result-icon-${result.key} ${result.key === "quiet" ? "" : "sprite-icon"}`}
+                role="img"
+                aria-label={results[result.key].iconLabel}
+              >
                 {results[result.key].icon}
               </div>
               <p className="result-description">{results[result.key].description}</p>
@@ -392,9 +522,14 @@ export default function Home() {
                 <p>{result.reason}</p>
               </div>
 
-              <button className="restart-button" type="button" onClick={reset}>
-                다시 하기 <span>↻</span>
-              </button>
+              <div className="result-actions">
+                <button className="restart-button" type="button" onClick={reset}>
+                  다시 하기 <span>↻</span>
+                </button>
+                <button className="explore-button" type="button" onClick={openMap}>
+                  다른 바다 알아보기 <span>⌖</span>
+                </button>
+              </div>
             </div>
           </section>
         )

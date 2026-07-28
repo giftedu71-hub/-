@@ -321,7 +321,10 @@ button:focus-visible,
 
 .back-button,
 .next-button,
-.restart-button {
+.restart-button,
+.explore-button,
+.map-back-button,
+.map-restart-button {
   border: 0;
   cursor: pointer;
 }
@@ -338,7 +341,9 @@ button:focus-visible,
 }
 
 .next-button,
-.restart-button {
+.restart-button,
+.explore-button,
+.map-restart-button {
   padding: 13px 19px 13px 23px;
   color: white;
   border-radius: 12px;
@@ -349,7 +354,8 @@ button:focus-visible,
 }
 
 .next-button span,
-.restart-button span {
+.restart-button span,
+.explore-button span {
   display: inline-block;
   margin-left: 14px;
 }
@@ -429,6 +435,34 @@ button:focus-visible,
   font-size: 58px;
 }
 
+.sprite-icon {
+  background-color: color-mix(in srgb, var(--accent) 10%, white);
+  background-image: url("/og.png");
+  background-repeat: no-repeat;
+  background-size: 750px 412px;
+  font-size: 0;
+}
+
+.result-icon-dadaepo {
+  background-position: 0 -164px;
+}
+
+.result-icon-songdo {
+  background-position: -150px -164px;
+}
+
+.result-icon-songjeong {
+  background-position: -300px -164px;
+}
+
+.result-icon-gwangalli {
+  background-position: -450px -164px;
+}
+
+.result-icon-haeundae {
+  background-position: -600px -164px;
+}
+
 @keyframes float {
   0%,
   100% {
@@ -495,8 +529,333 @@ button:focus-visible,
 }
 
 .restart-button {
-  margin-top: 27px;
   background: var(--accent);
+}
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 27px;
+  gap: 10px;
+}
+
+.explore-button {
+  color: var(--ink);
+  border: 1px solid #d9e7e2;
+  background: white;
+  box-shadow: none;
+}
+
+.map-screen {
+  width: min(1180px, 100%);
+  min-height: calc(100svh - 134px);
+  margin: 0 auto;
+  padding: 58px 0 72px;
+}
+
+.map-heading {
+  max-width: 680px;
+  margin-bottom: 34px;
+}
+
+.map-heading h1 {
+  margin: 0;
+  font-family: "Gowun Dodum", sans-serif;
+  font-size: clamp(42px, 5.2vw, 68px);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: -0.06em;
+}
+
+.map-heading > p:last-child {
+  margin: 19px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(520px, 1.45fr) minmax(290px, 0.55fr);
+  align-items: stretch;
+  gap: 22px;
+}
+
+.busan-map,
+.map-panel {
+  border: 1px solid rgba(20, 58, 67, 0.08);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 24px 70px rgba(28, 83, 86, 0.1);
+}
+
+.busan-map {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(255, 229, 167, 0.8) 0 28px, transparent 29px),
+    linear-gradient(145deg, #dff3ef, #c3e4e1);
+}
+
+.busan-map::before,
+.busan-map::after {
+  position: absolute;
+  width: 270px;
+  height: 80px;
+  content: "";
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-width: 2px 0 0;
+  border-radius: 50%;
+}
+
+.busan-map::before {
+  right: -20px;
+  bottom: 54px;
+  transform: rotate(-8deg);
+}
+
+.busan-map::after {
+  right: 65px;
+  bottom: 22px;
+  transform: rotate(4deg);
+}
+
+.map-land {
+  position: absolute;
+  top: 7%;
+  right: 6%;
+  bottom: 5%;
+  left: 4%;
+  border: 1px solid rgba(42, 105, 101, 0.12);
+  border-radius: 44% 32% 50% 24% / 30% 45% 35% 54%;
+  background:
+    radial-gradient(circle at 73% 27%, rgba(104, 158, 121, 0.25), transparent 70px),
+    radial-gradient(circle at 38% 63%, rgba(104, 158, 121, 0.18), transparent 95px),
+    #edf0d9;
+  box-shadow: inset -28px -20px 60px rgba(107, 152, 122, 0.16);
+  clip-path: polygon(19% 0, 76% 5%, 100% 28%, 86% 53%, 92% 67%, 70% 73%, 63% 100%, 36% 90%, 9% 100%, 0 73%, 17% 57%, 6% 36%);
+}
+
+.map-land::before,
+.map-land::after {
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+  background: rgba(95, 146, 108, 0.13);
+}
+
+.map-land::before {
+  top: 19%;
+  left: 31%;
+  width: 120px;
+  height: 75px;
+  transform: rotate(-12deg);
+}
+
+.map-land::after {
+  right: 24%;
+  bottom: 16%;
+  width: 100px;
+  height: 58px;
+}
+
+.map-river {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 44%;
+  height: 8px;
+  border-radius: 999px;
+  background: #bedfdc;
+}
+
+.river-one {
+  top: 48%;
+  left: 14%;
+  transform: rotate(21deg);
+}
+
+.river-two {
+  top: 59%;
+  left: 40%;
+  width: 31%;
+  transform: rotate(-35deg);
+}
+
+.east-sea,
+.south-sea {
+  position: absolute;
+  color: rgba(13, 111, 120, 0.48);
+  font-family: "Gowun Dodum", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+}
+
+.east-sea {
+  top: 42%;
+  right: 3%;
+  writing-mode: vertical-rl;
+}
+
+.south-sea {
+  bottom: 5%;
+  left: 43%;
+}
+
+.map-marker {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  padding: 0;
+  color: var(--ink);
+  border: 0;
+  background: transparent;
+  place-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.18s ease;
+}
+
+.map-marker:hover,
+.map-marker.active {
+  transform: translateY(-3px);
+}
+
+.map-marker i {
+  position: relative;
+  display: block;
+  width: 19px;
+  height: 19px;
+  border: 5px solid white;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--coral);
+  box-shadow: 0 5px 12px rgba(20, 58, 67, 0.22);
+}
+
+.map-marker.active i {
+  background: var(--sea);
+  box-shadow: 0 0 0 6px rgba(21, 143, 150, 0.15), 0 5px 12px rgba(20, 58, 67, 0.22);
+}
+
+.map-marker span {
+  padding: 5px 8px;
+  border: 1px solid rgba(20, 58, 67, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  box-shadow: 0 5px 13px rgba(20, 58, 67, 0.1);
+}
+
+.marker-quiet {
+  top: 12%;
+  right: 21%;
+}
+
+.marker-songjeong {
+  top: 29%;
+  right: 10%;
+}
+
+.marker-haeundae {
+  top: 47%;
+  right: 13%;
+}
+
+.marker-gwangalli {
+  right: 27%;
+  bottom: 28%;
+}
+
+.marker-songdo {
+  bottom: 17%;
+  left: 22%;
+}
+
+.marker-dadaepo {
+  bottom: 8%;
+  left: 7%;
+}
+
+.map-panel {
+  padding: 31px 27px 25px;
+}
+
+.map-panel > p {
+  margin: 0 0 7px;
+  color: var(--sea);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.map-panel h2 {
+  margin: 0 0 8px;
+  font-family: "Gowun Dodum", sans-serif;
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+}
+
+.map-note {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.map-beach-list {
+  display: grid;
+  margin-top: 28px;
+  border-top: 1px solid #e6ece8;
+}
+
+.map-beach-list button {
+  display: flex;
+  padding: 13px 3px;
+  color: #718688;
+  border: 0;
+  border-bottom: 1px solid #e6ece8;
+  background: transparent;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+}
+
+.map-beach-list button.active {
+  color: var(--sea);
+  font-weight: 800;
+}
+
+.map-beach-list i {
+  font-style: normal;
+}
+
+.map-actions {
+  display: grid;
+  margin-top: 24px;
+  gap: 9px;
+}
+
+.map-back-button,
+.map-restart-button {
+  min-height: 44px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.map-back-button {
+  color: var(--ink);
+  border: 1px solid #d9e7e2;
+  background: white;
+}
+
+.map-restart-button {
+  padding: 12px 14px;
+  background: var(--sea);
 }
 
 footer {
@@ -544,6 +903,15 @@ footer {
   }
 
   .quiz-card {
+    width: min(640px, 100%);
+    margin: 0 auto;
+  }
+
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .map-panel {
     width: min(640px, 100%);
     margin: 0 auto;
   }
@@ -623,6 +991,30 @@ footer {
     font-size: 58px;
   }
 
+  .sprite-icon {
+    background-size: 640px 351px;
+  }
+
+  .result-icon-dadaepo {
+    background-position: 0 -140px;
+  }
+
+  .result-icon-songdo {
+    background-position: -128px -140px;
+  }
+
+  .result-icon-songjeong {
+    background-position: -256px -140px;
+  }
+
+  .result-icon-gwangalli {
+    background-position: -384px -140px;
+  }
+
+  .result-icon-haeundae {
+    background-position: -512px -140px;
+  }
+
   .result-description {
     font-size: 14px;
   }
@@ -637,6 +1029,45 @@ footer {
 
   .result-meta p {
     text-align: center;
+  }
+
+  .result-actions {
+    display: grid;
+  }
+
+  .map-screen {
+    padding: 34px 0 48px;
+  }
+
+  .map-heading {
+    text-align: center;
+  }
+
+  .map-heading h1 {
+    font-size: 41px;
+  }
+
+  .map-heading h1 br {
+    display: none;
+  }
+
+  .map-heading > p:last-child {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .busan-map {
+    min-height: 450px;
+    border-radius: 22px;
+  }
+
+  .map-marker span {
+    font-size: 9px;
+  }
+
+  .map-panel {
+    padding: 25px 20px 20px;
+    border-radius: 22px;
   }
 
   footer {
