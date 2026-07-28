@@ -496,7 +496,11 @@ export default function Home() {
                   <span>야경</span>
                   <strong>{activeMapBeach.shortName}</strong>
                 </figcaption>
-                <img src={activeMapBeach.nightImage} alt={activeMapBeach.nightAlt} />
+                <img
+                  src={activeMapBeach.nightImage}
+                  alt={activeMapBeach.nightAlt}
+                  className={activeMapBeach.key === "haeundae" ? "focus-lower" : undefined}
+                />
               </figure>
               <div className="map-actions">
                 <button className="map-back-button" type="button" onClick={() => setShowMap(false)}>

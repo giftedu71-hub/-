@@ -981,6 +981,10 @@ button:focus-visible,
   background: #dce8e5;
 }
 
+.night-view img.focus-lower {
+  object-position: center 75%;
+}
+
 .map-actions {
   display: grid;
   margin-top: 24px;
