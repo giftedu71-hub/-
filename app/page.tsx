@@ -461,6 +461,17 @@ export default function Home() {
               <div className="selected-beach-card" key={activeMapBeach.key} aria-live="polite">
                 <p>선택한 해수욕장</p>
                 <h2>{activeMapBeach.title}</h2>
+                {activeMapBeach.key === "haeundae" && (
+                  <a
+                    className="haeundae-guide"
+                    href="https://www.haeundae.go.kr/index.do?menuCd=DOM_000000302001002000"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <img src="/beaches/haeundae-guide.jpg" alt="해운대해수욕장 전경" />
+                    <small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>
+                  </a>
+                )}
                 <span className="map-note">{activeMapBeach.note}</span>
 
                 <dl className="beach-details">

@@ -840,6 +840,35 @@ button:focus-visible,
   font-size: 13px;
 }
 
+.haeundae-guide {
+  display: block;
+  margin: 13px 0 10px;
+  overflow: hidden;
+  color: #718788;
+  border: 1px solid #dfeae5;
+  border-radius: 12px;
+  background: white;
+  text-decoration: none;
+}
+
+.haeundae-guide img {
+  display: block;
+  width: 100%;
+  height: 138px;
+  object-fit: cover;
+}
+
+.haeundae-guide small {
+  display: block;
+  padding: 8px 10px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.haeundae-guide:hover img {
+  transform: scale(1.025);
+}
+
 .beach-details {
   display: grid;
   margin: 18px 0 0;
