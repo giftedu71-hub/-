@@ -23,10 +23,10 @@ const questions: Question[] = [
     label: "혼잡도",
     prompt: "해변에 사람이 어느 정도 있는 것이 좋은가요?",
     answers: [
-      "사람이 많고 북적여야 신난다",
-      "사람이 어느 정도 있어서 활기찬 곳이 좋다",
-      "사람이 많지 않은 곳이 좋다",
       "거의 사람이 없는 한적한 곳이 좋다",
+      "사람이 많지 않은 곳이 좋다",
+      "사람이 어느 정도 있어서 활기찬 곳이 좋다",
+      "사람이 많고 북적여야 신난다",
     ],
   },
   {
@@ -34,10 +34,10 @@ const questions: Question[] = [
     label: "분위기",
     prompt: "가장 끌리는 해변 분위기는 무엇인가요?",
     answers: [
-      "화려하고 활기찬 관광지 분위기",
-      "젊고 감성적인 카페 거리 분위기",
-      "서핑과 레저를 즐기는 자유로운 분위기",
       "자연 속에서 쉬는 조용하고 여유로운 분위기",
+      "서핑과 레저를 즐기는 자유로운 분위기",
+      "젊고 감성적인 카페 거리 분위기",
+      "화려하고 활기찬 관광지 분위기",
     ],
   },
   {
@@ -149,6 +149,10 @@ const mapBeaches: Array<{
   note: string;
   atmosphere: string;
   crowd: number;
+  waveStrength: "강한 파도" | "약한 파도";
+  waveHeight: string;
+  waveDescription: string;
+  waveStage: number;
   position: string;
 }> = [
   {
@@ -158,6 +162,10 @@ const mapBeaches: Array<{
     note: "한적한 쉼과 잔잔한 바다",
     atmosphere: "조용하고 소박한 분위기",
     crowd: 1,
+    waveStrength: "약한 파도",
+    waveHeight: "(예상 유의파고 0.3~0.8m)",
+    waveDescription: "자연스러운 물결이 있는 해변",
+    waveStage: 1,
     position: "marker-quiet",
   },
   {
@@ -167,6 +175,10 @@ const mapBeaches: Array<{
     note: "서핑과 자유로운 레저",
     atmosphere: "자유롭고 역동적인 분위기",
     crowd: 4,
+    waveStrength: "강한 파도",
+    waveHeight: "(예상 유의파고 0.6m~1.0m 이상)",
+    waveDescription: "서핑을 즐기기 좋은 역동적인 파도가 있는 해변",
+    waveStage: 3,
     position: "marker-songjeong",
   },
   {
@@ -176,6 +188,10 @@ const mapBeaches: Array<{
     note: "부산을 대표하는 활기찬 관광지",
     atmosphere: "활기차고 화려한 분위기",
     crowd: 6,
+    waveStrength: "약한 파도",
+    waveHeight: "(예상 유의파고 0.3~0.8m)",
+    waveDescription: "바다의 느낌을 즐길 수 있는 적당한 파도가 있는 해변",
+    waveStage: 1,
     position: "marker-haeundae",
   },
   {
@@ -185,6 +201,10 @@ const mapBeaches: Array<{
     note: "광안대교 야경과 감성적인 카페",
     atmosphere: "젊고 낭만적인 분위기",
     crowd: 5,
+    waveStrength: "약한 파도",
+    waveHeight: "(예상 유의파고 0~0.5m)",
+    waveDescription: "편안하고 안정적인 바다를 느낄 수 있는 해변",
+    waveStage: 1,
     position: "marker-gwangalli",
   },
   {
@@ -194,6 +214,10 @@ const mapBeaches: Array<{
     note: "바다와 관광시설의 균형",
     atmosphere: "편안하고 가족 친화적인 분위기",
     crowd: 3,
+    waveStrength: "약한 파도",
+    waveHeight: "(예상 유의파고 0~0.6m)",
+    waveDescription: "비교적 잔잔하여 물놀이를 즐기기 좋은 해변",
+    waveStage: 1,
     position: "marker-songdo",
   },
   {
@@ -203,6 +227,10 @@ const mapBeaches: Array<{
     note: "넓은 모래사장과 아름다운 노을",
     atmosphere: "감성적이고 여유로운 분위기",
     crowd: 2,
+    waveStrength: "약한 파도",
+    waveHeight: "(예상 유의파고: 0~0.5m)",
+    waveDescription: "여유롭게 산책과 물놀이를 즐기기 좋은 해변",
+    waveStage: 1,
     position: "marker-dadaepo",
   },
 ];
@@ -233,13 +261,11 @@ function calculateResult(answers: number[]) {
       strong === 0
         ? "haeundae"
         : strong === 1
-          ? total <= 7
-            ? "quiet"
-            : "dadaepo"
+          ? "haeundae"
           : strong === 2
             ? "songjeong"
             : strong === 3
-              ? answers[1] === 4
+              ? answers[1] === 1
                 ? "dadaepo"
                 : "gwangalli"
               : answers[0] >= 3
@@ -248,7 +274,7 @@ function calculateResult(answers: number[]) {
 
     const reasons = [
       "북적이고 활기찬 곳을 원하는 취향을 우선했어요.",
-      "자연 속 여유를 원하는 분위기 취향을 우선했어요.",
+      "화려하고 활기찬 관광지 분위기 취향을 우선했어요.",
       "강한 파도와 레저를 원하는 취향을 우선했어요.",
       "화려한 야경을 원하는 취향을 우선했어요.",
       answers[0] >= 3
@@ -270,22 +296,21 @@ function calculateResult(answers: number[]) {
   scores[base] += 3;
 
   const moodMap: BeachKey[] = [
-    "haeundae",
-    "gwangalli",
-    "songjeong",
     total <= 7 ? "quiet" : "dadaepo",
+    "songjeong",
+    "gwangalli",
+    "haeundae",
   ];
   const moodChoice = moodMap[answers[1] - 1];
   scores[moodChoice] += 3;
 
   if (answers[0] === 4) scores.haeundae += 2;
   if (answers[1] === 4) {
-    scores.dadaepo += 2;
-    scores.quiet += 1;
+    scores.haeundae += 2;
   }
   if (answers[2] === 4) scores.songjeong += 4;
   if (answers[3] === 4) {
-    scores[answers[1] === 4 ? "dadaepo" : "gwangalli"] += 4;
+    scores[answers[1] === 1 ? "dadaepo" : "gwangalli"] += 4;
   }
   if (answers[4] === 4) {
     scores[answers[0] >= 3 ? "haeundae" : "songdo"] += 4;
@@ -432,6 +457,30 @@ export default function Home() {
                           aria-hidden="true"
                         />
                       ))}
+                    </dd>
+                  </div>
+                  <div className="wave-detail">
+                    <dt>파도 세기</dt>
+                    <dd>
+                      <div className="wave-summary">
+                        <span
+                          className="wave-steps"
+                          aria-label={`파도 세기 3단계 중 ${activeMapBeach.waveStage}단계`}
+                        >
+                          {Array.from({ length: 3 }, (_, index) => (
+                            <i
+                              key={index}
+                              className={index < activeMapBeach.waveStage ? "filled" : ""}
+                              aria-hidden="true"
+                            >
+                              ≈
+                            </i>
+                          ))}
+                        </span>
+                        <strong>{activeMapBeach.waveStrength}</strong>
+                      </div>
+                      <small>{activeMapBeach.waveHeight}</small>
+                      <p>{activeMapBeach.waveDescription}</p>
                     </dd>
                   </div>
                 </dl>

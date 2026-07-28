@@ -888,6 +888,71 @@ button:focus-visible,
   box-shadow: 0 2px 5px rgba(21, 143, 150, 0.18);
 }
 
+.beach-details .wave-detail {
+  display: grid;
+  padding-top: 14px;
+  border-top: 1px solid #e1ebe6;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+}
+
+.wave-detail > dd {
+  display: grid;
+  gap: 5px;
+  text-align: left;
+}
+
+.wave-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wave-summary strong {
+  color: var(--deep-sea);
+  font-size: 12px;
+}
+
+.wave-steps {
+  display: flex;
+  gap: 3px;
+}
+
+.wave-steps i {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  color: #aabdbb;
+  border: 1px solid #d4e1de;
+  border-radius: 6px;
+  background: white;
+  font: 800 15px/1 "Montserrat", sans-serif;
+  font-style: normal;
+}
+
+.wave-steps i.filled {
+  color: white;
+  border-color: var(--sea);
+  background: linear-gradient(145deg, #5ebeb4, var(--sea));
+  box-shadow: 0 2px 5px rgba(21, 143, 150, 0.17);
+}
+
+.wave-detail small {
+  color: #8aa09f;
+  font-size: 9.5px;
+  font-weight: 500;
+}
+
+.wave-detail p {
+  margin: 1px 0 0;
+  color: #647a7c;
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
 .map-beach-list {
   display: grid;
   margin-top: 20px;
@@ -1170,6 +1235,19 @@ footer {
 
   .beach-details dd {
     font-size: 11px;
+  }
+
+  .beach-details .wave-detail {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .wave-detail > dd {
+    gap: 6px;
+  }
+
+  .wave-detail p {
+    font-size: 10px;
   }
 
   .crowd-dots {
