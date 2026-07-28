@@ -152,7 +152,7 @@ const mapBeaches: Array<{
   waveStrength: "강한 파도" | "약한 파도";
   waveHeight: string;
   waveDescription: string;
-  waveStage: number;
+  facilities: string[];
   position: string;
 }> = [
   {
@@ -165,7 +165,7 @@ const mapBeaches: Array<{
     waveStrength: "약한 파도",
     waveHeight: "(예상 유의파고 0.3~0.8m)",
     waveDescription: "자연스러운 물결이 있는 해변",
-    waveStage: 1,
+    facilities: ["🌿 조용한 휴식", "🚶 산책", "👨‍👩‍👧 가족 여행"],
     position: "marker-quiet",
   },
   {
@@ -178,7 +178,7 @@ const mapBeaches: Array<{
     waveStrength: "강한 파도",
     waveHeight: "(예상 유의파고 0.6m~1.0m 이상)",
     waveDescription: "서핑을 즐기기 좋은 역동적인 파도가 있는 해변",
-    waveStage: 3,
+    facilities: ["🏄 서핑", "☕ 카페", "🍽 맛집", "🌊 해양레저"],
     position: "marker-songjeong",
   },
   {
@@ -191,7 +191,7 @@ const mapBeaches: Array<{
     waveStrength: "약한 파도",
     waveHeight: "(예상 유의파고 0.3~0.8m)",
     waveDescription: "바다의 느낌을 즐길 수 있는 적당한 파도가 있는 해변",
-    waveStage: 1,
+    facilities: ["🍽 맛집", "☕ 카페", "🛍 쇼핑", "🏨 숙박", "🎡 관광"],
     position: "marker-haeundae",
   },
   {
@@ -204,7 +204,7 @@ const mapBeaches: Array<{
     waveStrength: "약한 파도",
     waveHeight: "(예상 유의파고 0~0.5m)",
     waveDescription: "편안하고 안정적인 바다를 느낄 수 있는 해변",
-    waveStage: 1,
+    facilities: ["☕ 카페거리", "🍽 맛집", "🌉 야경 감상", "🚶 산책"],
     position: "marker-gwangalli",
   },
   {
@@ -217,7 +217,7 @@ const mapBeaches: Array<{
     waveStrength: "약한 파도",
     waveHeight: "(예상 유의파고 0~0.6m)",
     waveDescription: "비교적 잔잔하여 물놀이를 즐기기 좋은 해변",
-    waveStage: 1,
+    facilities: ["🚡 케이블카", "👨‍👩‍👧 가족 나들이", "🍽 음식점"],
     position: "marker-songdo",
   },
   {
@@ -230,7 +230,7 @@ const mapBeaches: Array<{
     waveStrength: "약한 파도",
     waveHeight: "(예상 유의파고: 0~0.5m)",
     waveDescription: "여유롭게 산책과 물놀이를 즐기기 좋은 해변",
-    waveStage: 1,
+    facilities: ["🌅 노을 감상", "🚶 산책", "🌿 자연경관", "📸 사진 명소"],
     position: "marker-dadaepo",
   },
 ];
@@ -462,25 +462,17 @@ export default function Home() {
                   <div className="wave-detail">
                     <dt>파도 세기</dt>
                     <dd>
-                      <div className="wave-summary">
-                        <span
-                          className="wave-steps"
-                          aria-label={`파도 세기 3단계 중 ${activeMapBeach.waveStage}단계`}
-                        >
-                          {Array.from({ length: 3 }, (_, index) => (
-                            <i
-                              key={index}
-                              className={index < activeMapBeach.waveStage ? "filled" : ""}
-                              aria-hidden="true"
-                            >
-                              ≈
-                            </i>
-                          ))}
-                        </span>
-                        <strong>{activeMapBeach.waveStrength}</strong>
-                      </div>
+                      <strong>{activeMapBeach.waveStrength}</strong>
                       <small>{activeMapBeach.waveHeight}</small>
                       <p>{activeMapBeach.waveDescription}</p>
+                    </dd>
+                  </div>
+                  <div className="facility-detail">
+                    <dt>주변 시설</dt>
+                    <dd>
+                      {activeMapBeach.facilities.map((facility) => (
+                        <span key={facility}>{facility}</span>
+                      ))}
                     </dd>
                   </div>
                 </dl>
