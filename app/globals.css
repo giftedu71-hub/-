@@ -437,7 +437,7 @@ button:focus-visible,
 
 .sprite-icon {
   overflow: hidden;
-  background-color: color-mix(in srgb, var(--accent) 10%, white);
+  background-color: color-mix(in srgb, var(--accent) 16%, white);
   background-image: none;
   font-size: 0;
 }
@@ -450,6 +450,7 @@ button:focus-visible,
   background-image: url("/og.png");
   background-repeat: no-repeat;
   background-size: 600px 400px;
+  border-radius: 50%;
 }
 
 .result-icon-quiet::before {
@@ -515,6 +516,34 @@ button:focus-visible,
   color: var(--ink);
   font-size: 20px;
   letter-spacing: -0.035em;
+}
+
+.result-beach-info {
+  margin: 18px 0 16px;
+  padding: 18px 20px;
+  border: 1px solid #dfeae5;
+  border-radius: 16px;
+  background: #f7fbf8;
+  text-align: left;
+}
+
+.result-beach-info h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  letter-spacing: -0.04em;
+}
+
+.result-beach-info .beach-details {
+  margin-top: 13px;
+}
+
+.result-beach-info .beach-details > div {
+  min-height: 24px;
+}
+
+.result-beach-info .facility-detail {
+  margin-top: 4px;
 }
 
 .result-meta {

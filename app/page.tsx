@@ -361,6 +361,9 @@ export default function Home() {
   const result = showResult ? calculateResult(answers) : null;
   const activeMapBeach =
     mapBeaches.find((beach) => beach.key === selectedMapBeach) ?? mapBeaches[0];
+  const resultBeach = result
+    ? mapBeaches.find((beach) => beach.key === result.key) ?? mapBeaches[0]
+    : null;
   const question = questions[step];
   const selected = answers[step];
 
@@ -607,6 +610,42 @@ export default function Home() {
                 <span>추천 해수욕장</span>
                 <strong>{results[result.key].beach}</strong>
               </div>
+
+              {resultBeach && (
+                <section className="result-beach-info" aria-label={`${resultBeach.title} 상세 정보`}>
+                  <h2>{resultBeach.title} 한눈에 보기</h2>
+                  <dl className="beach-details">
+                    <div>
+                      <dt>분위기</dt>
+                      <dd>{resultBeach.atmosphere}</dd>
+                    </div>
+                    <div className="crowd-detail">
+                      <dt>혼잡도</dt>
+                      <dd className="crowd-dots" aria-label={`혼잡도 6단계 중 ${resultBeach.crowd}단계`}>
+                        {Array.from({ length: 6 }, (_, index) => (
+                          <i key={index} className={index < resultBeach.crowd ? "filled" : ""} aria-hidden="true" />
+                        ))}
+                      </dd>
+                    </div>
+                    <div className="wave-detail">
+                      <dt>파도 세기</dt>
+                      <dd>
+                        <strong>{resultBeach.waveStrength}</strong>
+                        <small>{resultBeach.waveHeight}</small>
+                        <p>{resultBeach.waveDescription}</p>
+                      </dd>
+                    </div>
+                    <div className="facility-detail">
+                      <dt>주변 즐길거리</dt>
+                      <dd>
+                        {resultBeach.facilities.map((facility) => (
+                          <span key={facility}>{facility}</span>
+                        ))}
+                      </dd>
+                    </div>
+                  </dl>
+                </section>
+              )}
 
               <div className="result-meta">
                 <span>총점 {result.total}점</span>
