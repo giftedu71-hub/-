@@ -65,7 +65,7 @@ function addRestaurantList() {
     modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category, menu]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span><small>${menu || ""}</small></article>`).join("")}</section>`;
     const restaurantHint = document.createElement("small");
     restaurantHint.className = "restaurant-link-hint";
-    restaurantHint.textContent = "음식점 이름을 클릭하면 네이버 지도에서 확인할 수 있어요.";
+    restaurantHint.textContent = "(음식점을 클릭하면 네이버 지도에서 자세히 볼 수 있습니다.)";
     modal.querySelector(".restaurant-modal h3")?.insertAdjacentElement("afterend", restaurantHint);
     modal.querySelectorAll("article strong").forEach((nameElement) => {
       const url = restaurantLinks[nameElement.textContent];
@@ -86,6 +86,7 @@ function addRestaurantList() {
       button.type = "button";
       button.dataset.restaurantName = name;
       button.textContent = window.restaurantMarkers?.has(name) ? "표시삭제" : "지도 표시";
+      button.classList.toggle("is-active", window.restaurantMarkers?.has(name));
       button.addEventListener("click", () => window.toggleRestaurantMarker?.(name, button));
       article.appendChild(button);
     });
@@ -157,6 +158,7 @@ function addCafeList() {
       button.type = "button";
       button.dataset.restaurantName = name;
       button.textContent = window.restaurantMarkers?.has(name) ? "표시삭제" : "지도 표시";
+      button.classList.toggle("is-active", window.restaurantMarkers?.has(name));
       button.addEventListener("click", () => window.toggleRestaurantMarker?.(name, button));
       article.appendChild(button);
     });
@@ -260,16 +262,22 @@ function initBusanMap() {
 window.clearRestaurantMarkers = () => {
   window.restaurantMarkerLayer?.clearLayers();
   window.restaurantMarkers?.clear();
-  document.querySelectorAll(".restaurant-map-button").forEach((button) => { button.textContent = "지도 표시"; });
+  document.querySelectorAll(".restaurant-map-button").forEach((button) => { button.textContent = "지도 표시"; button.classList.remove("is-active"); });
 };
 
 const fixedPlaceAddresses = {
   "신사꽃게당": "부산광역시 해운대구 해운대해변로 257 202호", "금수복국 해운대본점": "부산광역시 해운대구 중동1로43번길 23", "해운대암소갈비집": "부산광역시 해운대구 중동2로10번길 32-10", "해운대원조할매국밥": "부산광역시 해운대구 구남로21번길 27", "류센소 본점": "부산광역시 해운대구 구남로8번길 62 1층", "나마스테 해운대점": "부산광역시 해운대구 해운대해변로265번길 7 2층",
-  "톤쇼우 광안점": "부산광역시 수영구 광안해변로279번길 13", "언양불고기 부산집": "부산광역시 수영구 남천바다로 32", "수변최고돼지국밥 민락본점": "부산광역시 수영구 광안해변로370번길 9-32", "디에이블 광안점": "부산광역시 수영구 민락수변로 29 3층",
-  "송도키친": "부산광역시 서구 송도해변로 113 페어필드 바이 메리어트 부산 송도비치 22층", "송정집": "부산광역시 해운대구 송정광어골로 59 1층", "해운대31cm해물칼국수 송정본점": "부산광역시 해운대구 송정중앙로6번길 52 1층", "미포집 송정직영점": "부산광역시 해운대구 송정구덕포길 70 1~3층",
+  "톤쇼우 광안점": "부산광역시 수영구 광안해변로279번길 13", "언양불고기 부산집": "부산광역시 수영구 남천바다로 32", "수변최고돼지국밥 민락본점": "부산광역시 수영구 광안해변로370번길 9-32", "갈삼구이": "부산광역시 수영구 민락수변로 7 4층", "광안리 진양호횟집": "부산광역시 수영구 광안해변로344번길 17-20 풍경타워 4층", "디에이블 광안점": "부산광역시 수영구 민락수변로 29 3층", "페로어페로 광안리점": "부산광역시 수영구 남천바다로 38-6",
+  "송도해솥": "부산광역시 서구 송도해변로 133 4층", "송도키친": "부산광역시 서구 송도해변로 113 페어필드 바이 메리어트 부산 송도비치 22층", "조새호오마카세": "부산광역시 서구 송도해변로 10 4층 상월대", "송정집": "부산광역시 해운대구 송정광어골로 59 1층", "해운대31cm해물칼국수 송정본점": "부산광역시 해운대구 송정중앙로6번길 52 1층", "미포집 송정직영점": "부산광역시 해운대구 송정구덕포길 70 1~3층",
   "할리스 부산송정점": "부산광역시 해운대구 송정광어골로 77", "투썸플레이스 부산송정힐스점": "부산광역시 해운대구 송정광어골로 83", "하삼동커피 송정점": "부산광역시 해운대구 송정중앙로 23", "더레스트마린": "부산광역시 해운대구 송정구덕포길 134",
   "파노라마 라운지 웨스틴조선 부산": "부산광역시 해운대구 동백로 67 웨스틴 조선 부산 1층", "스타벅스 해운대점": "부산광역시 해운대구 구남로 49", "랑데자뷰 해운대점": "부산광역시 해운대구 달맞이길62번길 23 3층", "산리오 러버스 클럽 해운대점": "부산광역시 해운대구 우동1로 56-4", "로우앤스윗 해리단길점": "부산광역시 해운대구 우동1로38번가길 1", "엣지993": "부산광역시 해운대구 달맞이길62번길 78",
   "차선책": "부산광역시 수영구 광안해변로 237 3층", "컵앤컵": "부산광역시 수영구 광안해변로 177 4층", "워킹홀리데이": "부산광역시 수영구 광안해변로 235 3층", "샌디스": "부산광역시 수영구 광안해변로 201", "별침대": "부산광역시 수영구 광안해변로 203", "카페오뜨 광안비치점": "부산광역시 수영구 광안해변로 209",
+};
+
+const fixedPlaceCoordinates = {
+  "금수복국 해운대본점": [35.1621620, 129.1642443], "해운대암소갈비집": [35.1633332, 129.1656741], "해운대원조할매국밥": [35.1627301, 129.1609919], "톤쇼우 광안점": [35.1563957, 129.1248902], "언양불고기 부산집": [35.1492695, 129.1129034], "수변최고돼지국밥 민락본점": [35.1560780, 129.1341146],
+  "할리스 부산송정점": [35.1783460, 129.1969681], "투썸플레이스 부산송정힐스점": [35.1783460, 129.1969681], "하삼동커피 송정점": [35.1829854, 129.2028381], "더레스트마린": [35.1710663, 129.1975473], "스타벅스 해운대점": [35.1616735, 129.1603502], "산리오 러버스 클럽 해운대점": [35.1636139, 129.1565233], "로우앤스윗 해리단길점": [35.1648920, 129.1580299], "엣지993": [35.1578569, 129.1723282],
+  "샌디스": [35.1384781, 129.1129089], "별침대": [35.1557532, 129.1245832], "카페오뜨 광안비치점": [35.1557220, 129.1325461],
 };
 
 window.toggleRestaurantMarker = async (name, button) => {
@@ -280,20 +288,25 @@ window.toggleRestaurantMarker = async (name, button) => {
     layer.removeLayer(window.restaurantMarkers.get(name));
     window.restaurantMarkers.delete(name);
     button.textContent = "지도 표시";
+    button.classList.remove("is-active");
     return;
   }
   try {
     button.disabled = true;
     button.textContent = "표시 중";
-    const query = fixedPlaceAddresses[name] || `${name} 부산광역시`;
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=ko&q=${encodeURIComponent(query)}`);
-    const places = await response.json();
-    if (!places[0]) throw new Error("not found");
-    const location = [Number(places[0].lat), Number(places[0].lon)];
+    let location = fixedPlaceCoordinates[name];
+    if (!location) {
+      const query = fixedPlaceAddresses[name] || `${name} 부산광역시`;
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=ko&q=${encodeURIComponent(query)}`);
+      const places = await response.json();
+      if (!places[0]) throw new Error("not found");
+      location = [Number(places[0].lat), Number(places[0].lon)];
+    }
     const marker = window.L.marker(location).addTo(layer).bindPopup(`<strong>${name}</strong>`).openPopup();
     window.restaurantMarkers.set(name, marker);
     map.flyTo(location, 16, { duration: 0.8 });
     button.textContent = "표시삭제";
+    button.classList.add("is-active");
   } catch {
     button.textContent = "지도 표시";
     window.alert("지도에서 위치를 찾지 못했어요. 정확한 도로명 주소 또는 위도·경도를 알려주시면 고정 마커로 추가할 수 있어요.");
