@@ -357,14 +357,13 @@ window.toggleRestaurantMarker = async (name, button) => {
 
 function addRestaurantMarkerClear() {
   const panel = document.querySelector(".map-panel");
-  const layout = document.querySelector(".map-layout");
-  if (!panel || !layout || layout.querySelector(".restaurant-marker-clear")) return;
+  if (!panel || panel.querySelector(".restaurant-marker-clear")) return;
   const button = document.createElement("button");
   button.className = "ghost restaurant-marker-clear";
   button.type = "button";
   button.textContent = "일괄 표시삭제";
   button.addEventListener("click", () => window.clearRestaurantMarkers?.());
-  layout.appendChild(button);
+  panel.appendChild(button);
   updateRestaurantMarkerClear();
 }
 
