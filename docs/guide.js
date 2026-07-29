@@ -6,6 +6,7 @@ function addHaeundaeGuide() {
   if (!card || !title || card.querySelector(".beach-guide")) return;
 
   const photoNames = {
+    "임랑·일광해수욕장": "imrang-ilgwang-guide.png",
     "다대포해수욕장": "dadaepo-guide.jpg",
     "송도해수욕장": "songdo-guide.jpg",
     "송정해수욕장": "songjeong-guide.jpg",

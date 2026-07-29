@@ -176,6 +176,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고 0.3~0.8m)",
     waveDescription: "자연스러운 물결이 있는 해변",
     facilities: ["🌿 조용한 휴식", "🚶 산책", "👨‍👩‍👧 가족 여행"],
+    guideImage: "/beaches/imrang-ilgwang-guide.png",
     nightImage: "/beaches/imrang-ilgwang.png",
     nightAlt: "임랑과 일광 해수욕장의 밤 풍경",
     position: "marker-quiet",
