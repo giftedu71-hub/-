@@ -263,12 +263,18 @@ window.clearRestaurantMarkers = () => {
   window.restaurantMarkerLayer?.clearLayers();
   window.restaurantMarkers?.clear();
   document.querySelectorAll(".restaurant-map-button").forEach((button) => { button.textContent = "지도 표시"; button.classList.remove("is-active"); });
+  updateRestaurantMarkerClear();
 };
+
+function updateRestaurantMarkerClear() {
+  const button = document.querySelector(".restaurant-marker-clear");
+  if (button) button.hidden = !(window.restaurantMarkers?.size > 0);
+}
 
 const fixedPlaceAddresses = {
   "신사꽃게당": "부산광역시 해운대구 우동 627-1", "전설의 우대갈비 해운대직영점": "부산광역시 해운대구 중동 1412-7", "금수복국 해운대본점": "부산광역시 해운대구 중동1로43번길 23", "해운대암소갈비집": "부산광역시 해운대구 중동2로10번길 32-10", "해운대원조할매국밥": "부산광역시 해운대구 구남로21번길 27", "류센소 본점": "부산광역시 해운대구 우동 641-15", "나마스테 해운대점": "부산광역시 해운대구 우동 626-4",
   "톤쇼우 광안점": "부산광역시 수영구 광안해변로279번길 13", "언양불고기 부산집": "부산광역시 수영구 남천바다로 32", "수변최고돼지국밥 민락본점": "부산광역시 수영구 광안해변로370번길 9-32", "갈삼구이": "부산광역시 수영구 민락동 181-86", "광안리 진양호횟집": "부산광역시 수영구 민락동 110-50", "디에이블 광안점": "부산광역시 수영구 민락동 181-223", "페로어페로 광안리점": "부산광역시 수영구 남천바다로 38-6",
-  "송도해솥": "부산광역시 서구 송도해변로 133 4층", "송도키친": "부산광역시 서구 송도해변로 113 페어필드 바이 메리어트 부산 송도비치 22층", "조새호오마카세": "부산광역시 서구 송도해변로 10 4층 상월대", "왕밀면냉면": "부산광역시 서구 충무대로 122-1 프레스코 2층", "최진사댁": "부산광역시 서구 암남동 620-24", "송정집": "부산광역시 해운대구 송정동 437-9", "해운대31cm해물칼국수 송정본점": "부산광역시 해운대구 송정동 158-2", "미포집 송정직영점": "부산광역시 해운대구 송정구덕포길 70 1~3층",
+  "송도해솥": "부산광역시 서구 송도해변로 133 4층", "송도키친": "부산광역시 서구 송도해변로 113 페어필드 바이 메리어트 부산 송도비치 22층", "조새호오마카세": "부산광역시 서구 송도해변로 10 4층 상월대", "왕밀면냉면": "부산광역시 서구 충무대로 122-1 프레스코 2층", "최진사댁": "부산광역시 서구 암남동 620-24", "송정집": "부산광역시 해운대구 송정동 437-9", "해운대31cm해물칼국수 송정본점": "부산광역시 해운대구 송정동 158-2", "송정가마솥돼지국밥": "부산광역시 해운대구 송정동 139-18", "다솥맛집 송정본점": "부산광역시 해운대구 송정동 313-10", "미포집 송정직영점": "부산광역시 해운대구 송정동 798-2", "낙불집 송정본점": "부산광역시 해운대구 송정동 442-5",
   "할리스 부산송정점": "부산광역시 해운대구 송정광어골로 77", "투썸플레이스 부산송정힐스점": "부산광역시 해운대구 송정광어골로 83", "하삼동커피 송정점": "부산광역시 해운대구 송정중앙로 23", "더레스트마린": "부산광역시 해운대구 송정구덕포길 134",
   "파노라마 라운지 웨스틴조선 부산": "부산광역시 해운대구 동백로 67 웨스틴 조선 부산 1층", "스타벅스 해운대점": "부산광역시 해운대구 구남로 49", "랑데자뷰 해운대점": "부산광역시 해운대구 달맞이길62번길 23 3층", "산리오 러버스 클럽 해운대점": "부산광역시 해운대구 우동1로 56-4", "로우앤스윗 해리단길점": "부산광역시 해운대구 우동1로38번가길 1", "엣지993": "부산광역시 해운대구 달맞이길62번길 78",
   "차선책": "부산광역시 수영구 광안해변로 237 3층", "컵앤컵": "부산광역시 수영구 광안해변로 177 4층", "워킹홀리데이": "부산광역시 수영구 광안해변로 235 3층", "샌디스": "부산광역시 수영구 광안해변로 201", "별침대": "부산광역시 수영구 광안해변로 203", "카페오뜨 광안비치점": "부산광역시 수영구 광안해변로 209",
@@ -289,6 +295,7 @@ window.toggleRestaurantMarker = async (name, button) => {
     window.restaurantMarkers.delete(name);
     button.textContent = "지도 표시";
     button.classList.remove("is-active");
+    updateRestaurantMarkerClear();
     return;
   }
   try {
@@ -307,6 +314,7 @@ window.toggleRestaurantMarker = async (name, button) => {
     map.flyTo(location, 16, { duration: 0.8 });
     button.textContent = "표시삭제";
     button.classList.add("is-active");
+    updateRestaurantMarkerClear();
   } catch {
     button.textContent = "지도 표시";
     window.alert("지도에서 위치를 찾지 못했어요. 정확한 도로명 주소 또는 위도·경도를 알려주시면 고정 마커로 추가할 수 있어요.");
@@ -316,14 +324,15 @@ window.toggleRestaurantMarker = async (name, button) => {
 };
 
 function addRestaurantMarkerClear() {
-  const actions = document.querySelector(".map-actions");
-  if (!actions || actions.querySelector(".restaurant-marker-clear")) return;
+  const heading = document.querySelector(".map-heading");
+  if (!heading || heading.querySelector(".restaurant-marker-clear")) return;
   const button = document.createElement("button");
   button.className = "ghost restaurant-marker-clear";
   button.type = "button";
-  button.textContent = "표시한 음식점 지우기";
+  button.textContent = "일괄 표시삭제";
   button.addEventListener("click", () => window.clearRestaurantMarkers?.());
-  actions.prepend(button);
+  heading.querySelector("p:last-of-type")?.insertAdjacentElement("afterend", button);
+  updateRestaurantMarkerClear();
 }
 
 function addBeachQuickSelector() {
