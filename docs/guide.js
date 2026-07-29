@@ -521,12 +521,25 @@ function addTypeRelations() {
   };
   const [similar, opposite] = relations[key] || [];
   if (!similar || !opposite) return;
+  const topMatches = {
+    quiet: ["quiet", "dadaepo", "songdo"],
+    dadaepo: ["dadaepo", "quiet", "songdo"],
+    songdo: ["songdo", "gwangalli", "songjeong"],
+    songjeong: ["songjeong", "gwangalli", "haeundae"],
+    gwangalli: ["gwangalli", "haeundae", "songdo"],
+    haeundae: ["haeundae", "gwangalli", "songdo"],
+  };
   const section = document.createElement("section");
   section.className = "type-relations";
   section.innerHTML = `<button type="button" data-type="${similar[0]}"><span>비슷한 유형</span><strong>${similar[1]}</strong></button><button type="button" data-type="${opposite[0]}"><span>반대되는 유형</span><strong>${opposite[1]}</strong></button>`;
   section.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type, true)));
+  const topSection = document.createElement("section");
+  topSection.className = "type-top-three";
+  topSection.innerHTML = `<h2>나와 어울리는 유형 <b>TOP 3</b></h2><div>${topMatches[key].map((typeKey, index) => `<button type="button" data-type="${typeKey}"><em>${index + 1}</em><span><strong>${beaches[typeKey].name}</strong><small>${beaches[typeKey].beach}</small></span></button>`).join("")}</div>`;
+  topSection.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type, true)));
   animal.insertAdjacentElement("afterend", recommend);
   resultInfo.insertAdjacentElement("afterend", section);
+  section.insertAdjacentElement("afterend", topSection);
 }
 
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
