@@ -14,7 +14,8 @@ function renderQuickPicker() {
 window.showQuickType = (key, fromRelation = false) => {
   const type = quickTypes.find(([itemKey]) => itemKey === key);
   if (fromRelation && !window.relatedTypeViewing) window.myResultAnswers = [...a];
-  window.relatedTypeViewing = fromRelation || Boolean(window.browsingTypesFromResult);
+  if (fromRelation) window.returnToOriginalAvailable = true;
+  window.relatedTypeViewing = fromRelation || Boolean(window.returnToOriginalAvailable);
   a = type[2];
   window.quickViewing = true;
   screen = "result";
@@ -31,6 +32,7 @@ window.showQuickMap = () => {
 
 window.showOtherTypes = () => {
   if (!window.myResultAnswers || !window.relatedTypeViewing) window.myResultAnswers = [...a];
+  window.returnToOriginalAvailable = true;
   window.browsingTypesFromResult = true;
   window.quickViewing = false;
   window.relatedTypeViewing = false;
@@ -44,6 +46,7 @@ window.backToMyResult = () => {
   a = [...window.myResultAnswers];
   window.relatedTypeViewing = false;
   window.browsingTypesFromResult = false;
+  window.returnToOriginalAvailable = false;
   window.quickViewing = false;
   screen = "result";
   render();
@@ -63,7 +66,7 @@ function addQuickBackButton() {
 
 function addMyResultButton() {
   const actions = document.querySelector(".result-actions");
-  if (!window.relatedTypeViewing || !actions || actions.querySelector(".my-result-back")) return;
+  if (!window.returnToOriginalAvailable || !actions || actions.querySelector(".my-result-back")) return;
   const button = document.createElement("button");
   button.className = "primary my-result-back";
   button.type = "button";
@@ -89,6 +92,7 @@ document.addEventListener("click", (event) => {
     window.quickViewing = false;
     window.relatedTypeViewing = false;
     window.browsingTypesFromResult = false;
+    window.returnToOriginalAvailable = false;
     window.myResultAnswers = null;
   }
 });
