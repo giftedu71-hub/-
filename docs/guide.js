@@ -47,8 +47,9 @@ function addRestaurantList() {
   };
   const title = card?.querySelector("h2")?.textContent.trim();
   if (!card || card.querySelector(".restaurant-tag") || !restaurantData[title]) return;
-  const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("맛집"));
+  const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("맛집") || item.textContent.includes("음식점"));
   if (!tag) return;
+  tag.textContent = tag.textContent.replace("음식점", "맛집");
   tag.classList.add("restaurant-tag");
   tag.addEventListener("click", () => {
     document.querySelector(".restaurant-modal-backdrop")?.remove();
@@ -148,6 +149,14 @@ document.addEventListener("click", (event) => {
     item.hidden = !visible;
     item.style.display = visible ? "grid" : "none";
   });
+  let empty = modal.querySelector(".restaurant-empty");
+  if (!empty) {
+    empty = document.createElement("p");
+    empty.className = "restaurant-empty";
+    empty.textContent = "해당하는 음식점이 없습니다.";
+    modal.appendChild(empty);
+  }
+  empty.hidden = [...modal.querySelectorAll("article[data-category]")].some((item) => !item.hidden);
 });
 
 document.addEventListener("click", (event) => {
