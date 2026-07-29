@@ -243,6 +243,16 @@ function initBusanMap() {
   };
   window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
   window.restaurantMarkers = new Map();
+  window.customMarkerLayer = window.L.layerGroup().addTo(map);
+  window.customMarkers = new Set();
+  window.customMarkingMode = false;
+  window.toggleCustomMarking = () => {
+    window.customMarkingMode = !window.customMarkingMode;
+    const button = document.querySelector(".custom-marker-toggle");
+    button?.classList.toggle("is-active", window.customMarkingMode);
+    if (button) button.textContent = window.customMarkingMode ? "마킹 종료" : "직접 마킹";
+    mapElement.classList.toggle("custom-marking-mode", window.customMarkingMode);
+  };
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
@@ -265,6 +275,15 @@ function initBusanMap() {
     });
     const marker = window.L.marker([lat, lng], { icon }).addTo(map);
     marker.on("click", () => window.pick(key));
+  });
+  map.on("click", (event) => {
+    if (!window.customMarkingMode) return;
+    const marker = window.L.marker(event.latlng).addTo(window.customMarkerLayer).bindTooltip("내 마커 · 클릭해서 삭제", { direction: "top" });
+    marker.on("click", () => {
+      window.customMarkerLayer.removeLayer(marker);
+      window.customMarkers.delete(marker);
+    });
+    window.customMarkers.add(marker);
   });
   window.setTimeout(() => map.invalidateSize(), 0);
 }
@@ -349,6 +368,18 @@ function addRestaurantMarkerClear() {
   updateRestaurantMarkerClear();
 }
 
+function addCustomMarkerToggle() {
+  const layout = document.querySelector(".map-layout");
+  if (!layout || layout.querySelector(".custom-marker-toggle")) return;
+  const button = document.createElement("button");
+  button.className = "ghost custom-marker-toggle";
+  button.type = "button";
+  button.textContent = "직접 마킹";
+  button.title = "버튼을 누른 뒤 지도 위치를 클릭하면 내 마커가 추가됩니다.";
+  button.addEventListener("click", () => window.toggleCustomMarking?.());
+  layout.appendChild(button);
+}
+
 function addBeachQuickSelector() {
   const heading = document.querySelector(".map-heading");
   const activeTitle = document.querySelector(".detail h2")?.textContent.trim();
@@ -401,6 +432,8 @@ new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { chi
 initBusanMap();
 new MutationObserver(addRestaurantMarkerClear).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addRestaurantMarkerClear();
+new MutationObserver(addCustomMarkerToggle).observe(document.querySelector("#app"), { childList: true, subtree: true });
+addCustomMarkerToggle();
 new MutationObserver(addBeachQuickSelector).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addBeachQuickSelector();
 new MutationObserver(addTypeRelations).observe(document.querySelector("#app"), { childList: true, subtree: true });
