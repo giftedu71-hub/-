@@ -267,6 +267,7 @@ function initBusanMap() {
     if (button) button.textContent = window.customMarkingMode ? "마킹 종료" : "직접 마킹";
     palette.hidden = !window.customMarkingMode;
     mapElement.classList.toggle("custom-marking-mode", window.customMarkingMode);
+    mapElement.closest(".map-layout")?.classList.toggle("has-custom-marker-tools", window.customMarkingMode || window.customMarkers.size > 0);
   };
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -328,8 +329,10 @@ window.clearCustomMarkers = () => {
 
 function updateCustomMarkerClear() {
   const button = document.querySelector(".custom-marker-clear");
+  const layout = document.querySelector(".map-layout");
   const hasMarkers = window.customMarkers?.size > 0;
   if (button) button.hidden = !hasMarkers;
+  layout?.classList.toggle("has-custom-marker-tools", Boolean(window.customMarkingMode || hasMarkers));
 }
 
 const fixedPlaceAddresses = {
