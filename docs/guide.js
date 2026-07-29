@@ -45,6 +45,12 @@ function addRestaurantList() {
     "송정해수욕장": [["송정집", "한식", "물국수, 비빔국수, 생김밥"], ["해운대31cm해물칼국수 송정본점", "한식", "해물칼국수"], ["송정가마솥돼지국밥", "한식", "돼지국밥, 수육"], ["다솥맛집 송정본점", "한식", "해산물솥밥, 전복솥밥"], ["미포집 송정직영점", "한식", "해물장정식, 간장게장"], ["낙불집 송정본점", "한식", "낙지볶음, 낙지불고기"], ["썹버거 송정점", "양식", "수제버거, 감자튀김"]],
     "송도해수욕장": [["송도해솥", "한식", "전복솥밥, 해산물솥밥"], ["송도키친", "한식", "돼지국밥, 수육"], ["김형제고기의철학 부산송도점", "한식", "이베리코 숙성돼지고기"], ["속시원해대구탕 송도점", "한식", "대구탕, 대구뽈찜"], ["조새호오마카세", "일식", "스시 오마카세, 사시미"], ["삿뽀로 송도점", "일식", "모둠회, 일식 코스요리"], ["스테이크팩토리 송도점", "양식", "스테이크, 파스타"]],
   };
+  const restaurantLinks = {
+    "신사꽃게당": "https://map.naver.com/p/search/신사꽃게당%20해운대", "전설의 우대갈비 해운대직영점": "https://map.naver.com/p/search/전설의%20우대갈비%20해운대직영점", "금수복국 해운대본점": "https://map.naver.com/p/search/금수복국%20해운대본점", "해운대암소갈비집": "https://map.naver.com/p/search/해운대암소갈비집", "해운대원조할매국밥": "https://map.naver.com/p/search/해운대원조할매국밥", "류센소 본점": "https://map.naver.com/p/search/류센소%20본점", "나마스테 해운대점": "https://map.naver.com/p/search/나마스테%20해운대점",
+    "톤쇼우 광안점": "https://map.naver.com/p/search/톤쇼우%20광안점", "언양불고기 부산집": "https://map.naver.com/p/search/언양불고기%20부산집", "수변최고돼지국밥 민락본점": "https://map.naver.com/p/search/수변최고돼지국밥%20민락본점", "갈삼구이": "https://map.naver.com/p/search/갈삼구이%20광안리", "광안리 진양호횟집": "https://map.naver.com/p/search/광안리%20진양호횟집", "디에이블 광안점": "https://map.naver.com/p/search/디에이블%20광안점", "페로어페로 광안리점": "https://map.naver.com/p/search/페로어페로%20광안리점",
+    "송도해솥": "https://map.naver.com/p/search/송도해솥%20부산", "송도키친": "https://map.naver.com/p/search/송도키친%20부산", "김형제고기의철학 부산송도점": "https://map.naver.com/p/search/김형제고기의철학%20부산송도점", "속시원해대구탕 송도점": "https://map.naver.com/p/search/속시원해대구탕%20송도점", "조새호오마카세": "https://map.naver.com/p/search/조새호오마카세%20부산", "삿뽀로 송도점": "https://map.naver.com/p/search/삿뽀로%20송도점%20부산", "스테이크팩토리 송도점": "https://map.naver.com/p/search/스테이크팩토리%20송도점%20부산",
+    "송정집": "https://map.naver.com/p/search/송정집%20부산/place/37153861?c=15.00,0,0,0,dh&placePath=%3Fbk_query%253D%2525EC%252586%2525A1%2525EC%2525A0%252595%2525EC%2525A7%252591%252520%2525EB%2525B6%252580%2525EC%252582%2525B0%2526entry%253Dbmp", "해운대31cm해물칼국수 송정본점": "https://map.naver.com/p/search/해운대31cm해물칼국수%20송정본점", "송정가마솥돼지국밥": "https://map.naver.com/p/search/송정가마솥돼지국밥", "다솥맛집 송정본점": "https://map.naver.com/p/search/다솥맛집%20송정본점", "미포집 송정직영점": "https://map.naver.com/p/search/미포집%20송정직영점", "낙불집 송정본점": "https://map.naver.com/p/search/낙불집%20송정본점", "썹버거 송정점": "https://map.naver.com/p/search/썹버거%20송정점",
+  };
   const title = card?.querySelector("h2")?.textContent.trim();
   if (!card || card.querySelector(".restaurant-tag") || !restaurantData[title]) return;
   const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("맛집") || item.textContent.includes("음식점"));
@@ -57,6 +63,17 @@ function addRestaurantList() {
     modal.className = "restaurant-modal-backdrop";
     const categoryCodes = { "한식": "korean", "양식": "western", "일식": "japanese", "중식": "chinese", "기타": "other" };
     modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category, menu]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span><small>${menu || ""}</small></article>`).join("")}</section>`;
+    modal.querySelectorAll("article strong").forEach((nameElement) => {
+      const url = restaurantLinks[nameElement.textContent];
+      if (!url) return;
+      const link = document.createElement("a");
+      link.className = "restaurant-link";
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = nameElement.textContent;
+      nameElement.replaceWith(link);
+    });
     modal.querySelectorAll(".restaurant-filters button").forEach((button) => button.addEventListener("click", () => {
       const filter = button.dataset.filter;
       modal.querySelectorAll(".restaurant-filters button").forEach((item) => item.classList.toggle("selected", item === button));
