@@ -392,7 +392,7 @@ function addTypeRelations() {
   const section = document.createElement("section");
   section.className = "type-relations";
   section.innerHTML = `<button type="button" data-type="${similar[0]}"><span>비슷한 유형</span><strong>${similar[1]}</strong></button><button type="button" data-type="${opposite[0]}"><span>반대되는 유형</span><strong>${opposite[1]}</strong></button>`;
-  section.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type)));
+  section.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type, true)));
   animal.insertAdjacentElement("afterend", recommend);
   resultInfo.insertAdjacentElement("afterend", section);
 }

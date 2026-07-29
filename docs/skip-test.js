@@ -11,8 +11,10 @@ function renderQuickPicker() {
   app.innerHTML = head() + `<section class="quick-picker"><p class="eyebrow">SKIP THE TEST</p><h1>궁금한 유형을<br>직접 골라보세요</h1><p>원하는 유형을 누르면 결과와 상세 정보를 바로 볼 수 있어요.</p><div class="quick-grid">${quickTypes.map(([key, name]) => `<button onclick="showQuickType('${key}')"><span class="quick-animal ${key}"></span><strong>${name}</strong><small>${beaches[key].beach}</small></button>`).join("")}</div><button class="primary quick-map" onclick="showQuickMap()">바다 보러가기 →</button></section>`;
 }
 
-window.showQuickType = (key) => {
+window.showQuickType = (key, fromRelation = false) => {
   const type = quickTypes.find(([itemKey]) => itemKey === key);
+  if (fromRelation && !window.relatedTypeViewing) window.myResultAnswers = [...a];
+  window.relatedTypeViewing = fromRelation;
   a = type[2];
   window.quickViewing = true;
   screen = "result";
@@ -29,7 +31,18 @@ window.showQuickMap = () => {
 
 window.backToQuickTypes = () => {
   window.quickViewing = false;
+  window.relatedTypeViewing = false;
   renderQuickPicker();
+};
+
+window.backToMyResult = () => {
+  if (!window.myResultAnswers) return;
+  a = [...window.myResultAnswers];
+  window.relatedTypeViewing = false;
+  window.quickViewing = false;
+  screen = "result";
+  render();
+  scrollTo(0, 0);
 };
 
 function addQuickBackButton() {
@@ -40,6 +53,17 @@ function addQuickBackButton() {
   button.type = "button";
   button.textContent = "다른 유형 보기";
   button.addEventListener("click", window.backToQuickTypes);
+  actions.prepend(button);
+}
+
+function addMyResultButton() {
+  const actions = document.querySelector(".result-actions");
+  if (!window.relatedTypeViewing || !actions || actions.querySelector(".my-result-back")) return;
+  const button = document.createElement("button");
+  button.className = "primary my-result-back";
+  button.type = "button";
+  button.textContent = "내 결과로 돌아가기";
+  button.addEventListener("click", window.backToMyResult);
   actions.prepend(button);
 }
 
@@ -54,8 +78,38 @@ function addSkipButton() {
   actions.insertAdjacentElement("afterend", button);
 }
 
-new MutationObserver(() => { addSkipButton(); addQuickBackButton(); }).observe(app, { childList: true, subtree: true });
+new MutationObserver(() => { addSkipButton(); addQuickBackButton(); addMyResultButton(); }).observe(app, { childList: true, subtree: true });
 document.addEventListener("click", (event) => {
   if (event.target.closest("button")?.textContent.trim() === "다시 하기") window.quickViewing = false;
 });
 addSkipButton();
+addMyResultButton();
+
+let fontScale = 1;
+function applyFontScale() {
+  document.querySelectorAll("#app *").forEach((element) => {
+    const current = parseFloat(getComputedStyle(element).fontSize);
+    if (!current) return;
+    const base = Number(element.dataset.baseFontSize || current / fontScale);
+    element.dataset.baseFontSize = base;
+    element.style.fontSize = `${base * fontScale}px`;
+  });
+}
+
+function addFontSizeControl() {
+  if (document.querySelector(".font-size-control")) return;
+  const control = document.createElement("div");
+  control.className = "font-size-control";
+  control.setAttribute("aria-label", "글씨 크기 조절");
+  control.innerHTML = '<button type="button" data-size="down" aria-label="글씨 작게">가−</button><span>글씨</span><button type="button" data-size="up" aria-label="글씨 크게">가+</button>';
+  control.addEventListener("click", (event) => {
+    const direction = event.target.closest("button")?.dataset.size;
+    if (!direction) return;
+    fontScale = Math.min(1.3, Math.max(0.9, Number((fontScale + (direction === "up" ? 0.1 : -0.1)).toFixed(1))));
+    applyFontScale();
+  });
+  document.body.appendChild(control);
+}
+
+new MutationObserver(() => applyFontScale()).observe(app, { childList: true, subtree: true });
+addFontSizeControl();
