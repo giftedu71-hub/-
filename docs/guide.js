@@ -123,6 +123,25 @@ function markInteractiveFacilities() {
 new MutationObserver(markInteractiveFacilities).observe(document.querySelector("#app"), { childList: true, subtree: true });
 markInteractiveFacilities();
 
+// 필터를 버튼의 실제 선택 결과에 맞춰 명시적으로 다시 적용한다.
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".restaurant-filters button");
+  if (!button) return;
+  const modal = button.closest(".restaurant-modal");
+  if (!modal) return;
+  const filter = button.dataset.filter;
+  modal.querySelectorAll(".restaurant-filters button").forEach((item) => {
+    const selected = item === button;
+    item.classList.toggle("selected", selected);
+    item.setAttribute("aria-pressed", String(selected));
+  });
+  modal.querySelectorAll("article[data-category]").forEach((item) => {
+    const visible = filter === "all" || item.dataset.category === filter;
+    item.hidden = !visible;
+    item.style.display = visible ? "grid" : "none";
+  });
+});
+
 document.addEventListener("click", (event) => {
   const tag = event.target.closest(".tags span");
   const title = document.querySelector(".detail h2")?.textContent.trim();
