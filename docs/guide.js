@@ -101,6 +101,28 @@ document.addEventListener("click", (event) => {
   document.body.appendChild(modal);
 });
 
+// Pop-up으로 열리는 주변 시설은 보기만 한 태그와 다르게 표시한다.
+function markInteractiveFacilities() {
+  document.querySelectorAll(".detail .tags span").forEach((tag) => {
+    const label = tag.textContent;
+    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74");
+    if (!isPopup) return;
+    tag.classList.add("interactive-facility");
+    tag.setAttribute("role", "button");
+    tag.tabIndex = 0;
+    tag.setAttribute("aria-label", `${label} \uC815\uBCF4 \uD31D\uC5C5 \uC5F4\uAE30`);
+    tag.onkeydown = (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        tag.click();
+      }
+    };
+  });
+}
+
+new MutationObserver(markInteractiveFacilities).observe(document.querySelector("#app"), { childList: true, subtree: true });
+markInteractiveFacilities();
+
 document.addEventListener("click", (event) => {
   const tag = event.target.closest(".tags span");
   const title = document.querySelector(".detail h2")?.textContent.trim();
