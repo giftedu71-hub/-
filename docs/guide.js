@@ -359,6 +359,31 @@ function initBusanMap() {
   locationButton.type = "button";
   locationButton.textContent = "나의 위치";
   locationButton.setAttribute("aria-label", "GPS로 현재 위치 표시");
+  const distanceButton = document.createElement("button");
+  distanceButton.className = "map-distance-toggle";
+  distanceButton.type = "button";
+  distanceButton.textContent = "해수욕장과의 거리";
+  distanceButton.hidden = true;
+  distanceButton.setAttribute("aria-label", "가까운 해수욕장 거리 보기");
+  const distanceInKm = ([lat1, lng1], [lat2, lng2]) => {
+    const toRadians = (value) => value * Math.PI / 180;
+    const deltaLat = toRadians(lat2 - lat1), deltaLng = toRadians(lng2 - lng1);
+    const value = Math.sin(deltaLat / 2) ** 2 + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(deltaLng / 2) ** 2;
+    return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+  };
+  distanceButton.addEventListener("click", () => {
+    if (!window.userLocation) return;
+    document.querySelector(".beach-distance-modal-backdrop")?.remove();
+    const distancePoints = [
+      ["해운대해수욕장", [35.1587, 129.1604]], ["광안리해수욕장", [35.1532, 129.1186]], ["송정해수욕장", [35.1783, 129.1994]],
+      ["송도해수욕장", [35.0773, 129.0207]], ["다대포해수욕장", [35.0465, 128.9678]], ["임랑·일광해수욕장", [(35.31602702472099 + 35.25940940374919) / 2, (129.26207635524128 + 129.23410274836846) / 2]],
+    ].map(([name, point]) => ({ name, distance: distanceInKm(window.userLocation, point) })).sort((first, second) => first.distance - second.distance);
+    const modal = document.createElement("div");
+    modal.className = "beach-distance-modal-backdrop";
+    modal.innerHTML = `<section class="beach-distance-modal" role="dialog" aria-modal="true" aria-label="가까운 해수욕장 거리"><button class="beach-distance-close" aria-label="거리 목록 닫기">×</button><p>NEAREST BEACHES</p><h3>나와 가까운 해수욕장</h3><small class="distance-note">직선거리 기준이며, 실제 이동 거리는 다를 수 있어요.</small>${distancePoints.map((item, index) => `<article><b>${index + 1}</b><strong>${item.name}</strong><span>${item.distance < 1 ? `${Math.round(item.distance * 1000)}m` : `${item.distance.toFixed(1)}km`}</span></article>`).join("")}</section>`;
+    modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".beach-distance-close")) modal.remove(); });
+    document.body.appendChild(modal);
+  });
   locationButton.addEventListener("click", () => {
     if (!navigator.geolocation) {
       window.alert("이 브라우저에서는 위치 정보를 사용할 수 없어요.");
@@ -368,6 +393,7 @@ function initBusanMap() {
     locationButton.textContent = "위치 확인 중";
     navigator.geolocation.getCurrentPosition((position) => {
       const location = [position.coords.latitude, position.coords.longitude];
+      window.userLocation = location;
       window.userLocationMarker?.remove();
       window.userLocationAccuracy?.remove();
       window.userLocationMarker = window.L.circleMarker(location, { radius: 8, color: "#fff", weight: 3, fillColor: "#2579d4", fillOpacity: 1 }).addTo(map).bindPopup("<strong>나의 현재 위치</strong>");
@@ -376,6 +402,7 @@ function initBusanMap() {
       window.userLocationMarker.openPopup();
       locationButton.disabled = false;
       locationButton.textContent = "나의 위치";
+      distanceButton.hidden = false;
     }, () => {
       locationButton.disabled = false;
       locationButton.textContent = "나의 위치";
@@ -383,6 +410,7 @@ function initBusanMap() {
     }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
   });
   mapElement.appendChild(locationButton);
+  mapElement.appendChild(distanceButton);
   if (!window.mapFullscreenEscapeBound) {
     window.mapFullscreenEscapeBound = true;
     document.addEventListener("keydown", (event) => {
