@@ -229,7 +229,13 @@ function initBusanMap() {
   mapElement.dataset.leafletReady = "true";
   mapElement.classList.add("actual-map");
   mapElement.innerHTML = "";
-  const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView([35.158, 129.105], 11);
+  const selectedTitle = document.querySelector(".detail h2")?.textContent.trim();
+  const beachFocus = {
+    "해운대해수욕장": [35.1587, 129.1604], "광안리해수욕장": [35.1532, 129.1186], "송정해수욕장": [35.1783, 129.1994],
+    "송도해수욕장": [35.0773, 129.0207], "다대포해수욕장": [35.0465, 128.9678], "임랑·일광해수욕장": [35.2900, 129.2520],
+  };
+  const focus = beachFocus[selectedTitle];
+  const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView(focus || [35.158, 129.105], focus ? 14 : 11);
   window.busanLeafletMap = map;
   window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
   window.restaurantMarkers = new Map();
@@ -336,9 +342,9 @@ function addRestaurantMarkerClear() {
 }
 
 function addBeachQuickSelector() {
-  const heading = document.querySelector(".map-heading");
+  const panel = document.querySelector(".map-panel");
   const activeTitle = document.querySelector(".detail h2")?.textContent.trim();
-  if (!heading || !activeTitle || heading.querySelector(".beach-quick-selector")) return;
+  if (!panel || !activeTitle || panel.querySelector(".beach-quick-selector")) return;
   const beaches = [["haeundae", "해운대해수욕장"], ["gwangalli", "광안리해수욕장"], ["songjeong", "송정해수욕장"], ["songdo", "송도해수욕장"], ["dadaepo", "다대포해수욕장"], ["quiet", "임랑·일광해수욕장"]];
   const selector = document.createElement("div");
   selector.className = "beach-quick-selector";
@@ -351,7 +357,7 @@ function addBeachQuickSelector() {
     button.addEventListener("click", () => window.pick(key));
     selector.appendChild(button);
   });
-  heading.querySelector("p:last-of-type")?.insertAdjacentElement("afterend", selector);
+  panel.querySelector(".detail")?.insertAdjacentElement("beforebegin", selector);
 }
 
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
