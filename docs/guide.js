@@ -246,11 +246,26 @@ function initBusanMap() {
   window.customMarkerLayer = window.L.layerGroup().addTo(map);
   window.customMarkers = new Set();
   window.customMarkingMode = false;
+  window.customMarkerColor = "#7657d9";
+  const colorChoices = ["#7657d9", "#158f96", "#eb7a67", "#e4ad25"];
+  const palette = document.createElement("div");
+  palette.className = "custom-marker-palette";
+  palette.hidden = true;
+  palette.setAttribute("aria-label", "내 마커 색상 선택");
+  palette.innerHTML = colorChoices.map((color, index) => `<button type="button" data-color="${color}" aria-label="마커 색상 ${index + 1}" style="--marker-choice:${color}"></button>`).join("");
+  palette.querySelectorAll("button").forEach((button) => button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    window.customMarkerColor = button.dataset.color;
+    palette.querySelectorAll("button").forEach((item) => item.classList.toggle("is-selected", item === button));
+  }));
+  palette.querySelector("button")?.classList.add("is-selected");
+  mapElement.appendChild(palette);
   window.toggleCustomMarking = () => {
     window.customMarkingMode = !window.customMarkingMode;
     const button = document.querySelector(".custom-marker-toggle");
     button?.classList.toggle("is-active", window.customMarkingMode);
     if (button) button.textContent = window.customMarkingMode ? "마킹 종료" : "직접 마킹";
+    palette.hidden = !window.customMarkingMode;
     mapElement.classList.toggle("custom-marking-mode", window.customMarkingMode);
   };
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -278,12 +293,17 @@ function initBusanMap() {
   });
   map.on("click", (event) => {
     if (!window.customMarkingMode) return;
-    const marker = window.L.marker(event.latlng).addTo(window.customMarkerLayer).bindTooltip("내 마커 · 클릭해서 삭제", { direction: "top" });
+    const name = window.prompt("이 마커의 이름을 입력하세요.", "내 마커");
+    if (name === null) return;
+    const icon = window.L.divIcon({ className: "custom-map-marker-wrap", html: `<span class="custom-map-pin" style="--custom-marker-color:${window.customMarkerColor}"></span>`, iconSize: [28, 36], iconAnchor: [14, 32], tooltipAnchor: [0, -26] });
+    const marker = window.L.marker(event.latlng, { icon }).addTo(window.customMarkerLayer).bindTooltip(`${name.trim() || "내 마커"} · 클릭해서 삭제`, { direction: "top", permanent: true, className: "custom-marker-label" });
     marker.on("click", () => {
       window.customMarkerLayer.removeLayer(marker);
       window.customMarkers.delete(marker);
+      updateCustomMarkerClear();
     });
     window.customMarkers.add(marker);
+    updateCustomMarkerClear();
   });
   window.setTimeout(() => map.invalidateSize(), 0);
 }
@@ -298,6 +318,20 @@ window.clearRestaurantMarkers = () => {
 function updateRestaurantMarkerClear() {
   const button = document.querySelector(".restaurant-marker-clear");
   if (button) button.hidden = !(window.restaurantMarkers?.size > 0);
+}
+
+window.clearCustomMarkers = () => {
+  window.customMarkerLayer?.clearLayers();
+  window.customMarkers?.clear();
+  updateCustomMarkerClear();
+};
+
+function updateCustomMarkerClear() {
+  const button = document.querySelector(".custom-marker-clear");
+  const panel = document.querySelector(".map-panel");
+  const hasMarkers = window.customMarkers?.size > 0;
+  if (button) button.hidden = !hasMarkers;
+  panel?.classList.toggle("has-custom-markers", hasMarkers);
 }
 
 const fixedPlaceAddresses = {
@@ -379,6 +413,18 @@ function addCustomMarkerToggle() {
   panel.appendChild(button);
 }
 
+function addCustomMarkerClear() {
+  const panel = document.querySelector(".map-panel");
+  if (!panel || panel.querySelector(".custom-marker-clear")) return;
+  const button = document.createElement("button");
+  button.className = "ghost custom-marker-clear";
+  button.type = "button";
+  button.textContent = "내 마킹 삭제";
+  button.addEventListener("click", () => window.clearCustomMarkers?.());
+  panel.appendChild(button);
+  updateCustomMarkerClear();
+}
+
 function addBeachQuickSelector() {
   const heading = document.querySelector(".map-heading");
   const activeTitle = document.querySelector(".detail h2")?.textContent.trim();
@@ -433,6 +479,8 @@ new MutationObserver(addRestaurantMarkerClear).observe(document.querySelector("#
 addRestaurantMarkerClear();
 new MutationObserver(addCustomMarkerToggle).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addCustomMarkerToggle();
+new MutationObserver(addCustomMarkerClear).observe(document.querySelector("#app"), { childList: true, subtree: true });
+addCustomMarkerClear();
 new MutationObserver(addBeachQuickSelector).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addBeachQuickSelector();
 new MutationObserver(addTypeRelations).observe(document.querySelector("#app"), { childList: true, subtree: true });
