@@ -211,11 +211,11 @@ document.addEventListener("click", (event) => {
 document.addEventListener("click", (event) => {
   const tag = event.target.closest(".tags span");
   const title = document.querySelector(".detail h2")?.textContent.trim();
-  if (!tag || !tag.textContent.includes("산책") || title !== "다대포해수욕장") return;
+  if (!tag || !tag.textContent.includes("산책") || !["다대포해수욕장", "임랑·일광해수욕장"].includes(title)) return;
   document.querySelector(".walk-modal-backdrop")?.remove();
   const modal = document.createElement("div");
   modal.className = "walk-modal-backdrop";
-  modal.innerHTML = `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong><small>4월 말부터 10월까지 정기적으로 펼쳐지는 화려한 분수쇼 (월요일은 휴무)</small></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong><small>광활한 갈대밭, 갯벌 생태계, 그리고 아름다운 낙조(일몰)를 함께 즐길 수 있는 대표적인 친환경 명소</small></article></section>`;
+  modal.innerHTML = title === "다대포해수욕장" ? `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong><small>4월 말부터 10월까지 정기적으로 펼쳐지는 화려한 분수쇼 (월요일은 휴무)</small></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong><small>광활한 갈대밭, 갯벌 생태계, 그리고 아름다운 낙조(일몰)를 함께 즐길 수 있는 대표적인 친환경 명소</small></article></section>` : `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="임랑·일광 해수욕장 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>IMRANG · ILGWANG WALK PICK</p><h3>임랑·일광 산책 명소</h3><article class="walk-text"><img src="./beaches/imrang-breakwater-walk.jpg" alt="임랑해수욕장 방파제 산책로"><strong>임랑해수욕장 방파제 산책로</strong><small>임랑해수욕장 북쪽 끝, 물고기 모양의 등대가 있는 방파제 해안 산책로. 부산 갈맷길 1코스의 출발점입니다.</small></article><article class="walk-text"><img src="./beaches/ilgwang-coastal-deck.jpg" alt="일광해수욕장 해안 데크길"><strong>일광해수욕장 해안 데크길</strong><small>일광해수욕장 끝에서 조용한 어촌마을인 학리마을(학리방파제)까지 이어지는 약 1km 길이의 평탄한 해안산책로</small></article></section>`;
   modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".walk-close")) modal.remove(); });
   document.body.appendChild(modal);
 });
@@ -225,7 +225,7 @@ function markInteractiveFacilities() {
   const title = document.querySelector(".detail h2")?.textContent.trim();
   document.querySelectorAll(".detail .tags span").forEach((tag) => {
     const label = tag.textContent;
-    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74") || label.includes("\uCE74\uD398") || (title === "다대포해수욕장" && label.includes("산책"));
+    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74") || label.includes("\uCE74\uD398") || (["다대포해수욕장", "임랑·일광해수욕장"].includes(title) && label.includes("산책"));
     if (!isPopup) return;
     tag.classList.add("interactive-facility");
     tag.setAttribute("role", "button");
