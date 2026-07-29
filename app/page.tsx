@@ -160,6 +160,7 @@ const mapBeaches: Array<{
   waveHeight: string;
   waveDescription: string;
   facilities: string[];
+  guideImage?: string;
   nightImage: string;
   nightAlt: string;
   position: string;
@@ -190,6 +191,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고 0.6m~1.0m 이상)",
     waveDescription: "서핑을 즐기기 좋은 역동적인 파도가 있는 해변",
     facilities: ["🏄 서핑", "☕ 카페", "🍽 맛집", "🌊 해양레저"],
+    guideImage: "/beaches/songjeong-guide.jpg",
     nightImage: "/beaches/songjeong.png",
     nightAlt: "송정해수욕장의 밤 풍경",
     position: "marker-songjeong",
@@ -205,6 +207,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고 0.3~0.8m)",
     waveDescription: "바다의 느낌을 즐길 수 있는 적당한 파도가 있는 해변",
     facilities: ["🍽 맛집", "☕ 카페", "🛍 쇼핑", "🏨 숙박", "🎡 관광"],
+    guideImage: "/beaches/haeundae-guide.jpg",
     nightImage: "/beaches/haeundae.png",
     nightAlt: "해운대해수욕장의 화려한 야경",
     position: "marker-haeundae",
@@ -220,6 +223,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고 0~0.5m)",
     waveDescription: "편안하고 안정적인 바다를 느낄 수 있는 해변",
     facilities: ["☕ 카페거리", "🍽 맛집", "🌉 야경 감상", "🚶 산책"],
+    guideImage: "/beaches/gwangalli-guide.jpg",
     nightImage: "/beaches/gwangalli.png",
     nightAlt: "광안대교가 보이는 광안리해수욕장 야경",
     position: "marker-gwangalli",
@@ -235,6 +239,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고 0~0.6m)",
     waveDescription: "비교적 잔잔하여 물놀이를 즐기기 좋은 해변",
     facilities: ["🚡 케이블카", "👨‍👩‍👧 가족 나들이", "🍽 음식점"],
+    guideImage: "/beaches/songdo-guide.jpg",
     nightImage: "/beaches/songdo.png",
     nightAlt: "송도해수욕장의 밤 풍경",
     position: "marker-songdo",
@@ -250,6 +255,7 @@ const mapBeaches: Array<{
     waveHeight: "(예상 유의파고: 0~0.5m)",
     waveDescription: "여유롭게 산책과 물놀이를 즐기기 좋은 해변",
     facilities: ["🌅 노을 감상", "🚶 산책", "🌿 자연경관", "📸 사진 명소"],
+    guideImage: "/beaches/dadaepo-guide.jpg",
     nightImage: "/beaches/dadaepo.jpg",
     nightAlt: "다대포해수욕장 주변의 밤 풍경",
     position: "marker-dadaepo",
@@ -491,6 +497,11 @@ export default function Home() {
                     <img src="/beaches/haeundae-guide.jpg" alt="해운대해수욕장 전경" />
                     <small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>
                   </a>
+                )}
+                {activeMapBeach.key !== "haeundae" && activeMapBeach.guideImage && (
+                  <figure className="beach-guide-photo">
+                    <img src={activeMapBeach.guideImage} alt={`${activeMapBeach.title} 전경`} />
+                  </figure>
                 )}
                 <span className="map-note">{activeMapBeach.note}</span>
 

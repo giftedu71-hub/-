@@ -3,10 +3,28 @@ const haeundaeGuideUrl = "https://www.haeundae.go.kr/index.do?menuCd=DOM_0000003
 function addHaeundaeGuide() {
   const card = document.querySelector(".detail");
   const title = card?.querySelector("h2");
-  if (!card || !title || title.textContent.trim() !== "해운대해수욕장" || card.querySelector(".haeundae-guide")) return;
+  if (!card || !title || card.querySelector(".beach-guide")) return;
+
+  const photoNames = {
+    "다대포해수욕장": "dadaepo-guide.jpg",
+    "송도해수욕장": "songdo-guide.jpg",
+    "송정해수욕장": "songjeong-guide.jpg",
+    "광안리해수욕장": "gwangalli-guide.jpg",
+  };
+
+  const photoName = photoNames[title.textContent.trim()];
+  if (photoName) {
+    const figure = document.createElement("figure");
+    figure.className = "beach-guide beach-guide-photo";
+    figure.innerHTML = `<img src="./beaches/${photoName}" alt="${title.textContent.trim()} 전경">`;
+    title.insertAdjacentElement("afterend", figure);
+    return;
+  }
+
+  if (title.textContent.trim() !== "해운대해수욕장") return;
 
   const link = document.createElement("a");
-  link.className = "haeundae-guide";
+  link.className = "haeundae-guide beach-guide";
   link.href = haeundaeGuideUrl;
   link.target = "_blank";
   link.rel = "noreferrer";

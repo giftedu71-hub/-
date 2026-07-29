@@ -899,6 +899,21 @@ button:focus-visible,
   transform: scale(1.025);
 }
 
+.beach-guide-photo {
+  margin: 13px 0 10px;
+  overflow: hidden;
+  border: 1px solid #dfeae5;
+  border-radius: 12px;
+  background: white;
+}
+
+.beach-guide-photo img {
+  display: block;
+  width: 100%;
+  height: 138px;
+  object-fit: cover;
+}
+
 .beach-details {
   display: grid;
   margin: 18px 0 0;
