@@ -67,6 +67,24 @@ function addRestaurantList() {
   });
 }
 
-new MutationObserver(() => { addHaeundaeGuide(); addRestaurantList(); }).observe(document.querySelector("#app"), { childList: true, subtree: true });
+function addLodgingList() {
+  const card = document.querySelector(".detail");
+  if (!card || card.querySelector(".lodging-tag") || card.querySelector("h2")?.textContent.trim() !== "해운대해수욕장") return;
+  const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("숙박"));
+  if (!tag) return;
+  tag.classList.add("lodging-tag");
+  tag.addEventListener("click", () => {
+    document.querySelector(".lodging-modal-backdrop")?.remove();
+    const stays = [["토유료칸호텔", "9.5", "도보 약 3분"], ["해운대 엘본 더 스테이", "9.5", "도보 약 6분"], ["L7 해운대 바이 롯데", "9.0", "도보 약 3분"], ["소노문 해운대", "9.0", "도보 약 4분"], ["UH 컨티넨탈 센터포인트", "9.0", "해수욕장 인근"], ["코브 스테이 해운대", "8.8", "도보 약 5분"], ["하운드호텔 해운대 시그니처", "8.8", "도보 약 7분"]];
+    const modal = document.createElement("div");
+    modal.className = "lodging-modal-backdrop";
+    modal.innerHTML = `<section class="lodging-modal" role="dialog" aria-modal="true" aria-label="해운대 숙박시설 추천"><button class="lodging-close" aria-label="숙박 목록 닫기">×</button><p>HAEUNDAE STAY PICK</p><h3>해운대 숙박시설</h3>${stays.map(([name, rating, distance], index) => `<article><b>${index + 1}</b><strong>${name}</strong><span>평점 ${rating} · ${distance}</span></article>`).join("")}</section>`;
+    modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".lodging-close")) modal.remove(); });
+    document.body.appendChild(modal);
+  });
+}
+
+new MutationObserver(() => { addHaeundaeGuide(); addRestaurantList(); addLodgingList(); }).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addHaeundaeGuide();
 addRestaurantList();
+addLodgingList();
