@@ -82,7 +82,11 @@ function addSkipButton() {
   button.className = "skip-test";
   button.type = "button";
   button.textContent = "테스트 건너뛰기";
-  button.addEventListener("click", renderQuickPicker);
+  button.addEventListener("click", () => {
+    window.hasTestResult = false;
+    window.returnToOriginalAvailable = false;
+    renderQuickPicker();
+  });
   actions.insertAdjacentElement("afterend", button);
 }
 
