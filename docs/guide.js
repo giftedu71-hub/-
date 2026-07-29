@@ -354,6 +354,35 @@ function initBusanMap() {
     window.setTimeout(() => map.invalidateSize(), 0);
   });
   mapElement.appendChild(fullscreenButton);
+  const locationButton = document.createElement("button");
+  locationButton.className = "map-location-toggle";
+  locationButton.type = "button";
+  locationButton.textContent = "나의 위치";
+  locationButton.setAttribute("aria-label", "GPS로 현재 위치 표시");
+  locationButton.addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      window.alert("이 브라우저에서는 위치 정보를 사용할 수 없어요.");
+      return;
+    }
+    locationButton.disabled = true;
+    locationButton.textContent = "위치 확인 중";
+    navigator.geolocation.getCurrentPosition((position) => {
+      const location = [position.coords.latitude, position.coords.longitude];
+      window.userLocationMarker?.remove();
+      window.userLocationAccuracy?.remove();
+      window.userLocationMarker = window.L.circleMarker(location, { radius: 8, color: "#fff", weight: 3, fillColor: "#2579d4", fillOpacity: 1 }).addTo(map).bindPopup("<strong>나의 현재 위치</strong>");
+      window.userLocationAccuracy = window.L.circle(location, { radius: position.coords.accuracy, color: "#2579d4", weight: 1, fillColor: "#2579d4", fillOpacity: 0.12 }).addTo(map);
+      map.flyTo(location, 16, { duration: 0.8 });
+      window.userLocationMarker.openPopup();
+      locationButton.disabled = false;
+      locationButton.textContent = "나의 위치";
+    }, () => {
+      locationButton.disabled = false;
+      locationButton.textContent = "나의 위치";
+      window.alert("현재 위치를 가져오지 못했어요. 브라우저의 위치 권한을 허용해 주세요.");
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 });
+  });
+  mapElement.appendChild(locationButton);
   if (!window.mapFullscreenEscapeBound) {
     window.mapFullscreenEscapeBound = true;
     document.addEventListener("keydown", (event) => {
