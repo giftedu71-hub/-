@@ -248,6 +248,28 @@ function initBusanMap() {
   window.restaurantMarkers = new Map();
   window.customMarkerLayer = window.L.layerGroup().addTo(map);
   window.customMarkers = new Set();
+  const customMarkerStorageKey = "busan-beach-custom-markers-v1";
+  try {
+    const savedMarkers = JSON.parse(localStorage.getItem(customMarkerStorageKey) || "[]");
+    window.customMarkerRecords = Array.isArray(savedMarkers) ? savedMarkers.filter((item) => Number.isFinite(item?.lat) && Number.isFinite(item?.lng)) : [];
+  } catch {
+    window.customMarkerRecords = [];
+  }
+  window.saveCustomMarkers = () => {
+    try { localStorage.setItem(customMarkerStorageKey, JSON.stringify(window.customMarkerRecords)); } catch {}
+  };
+  window.renderCustomMarker = (record) => {
+    const icon = window.L.divIcon({ className: "custom-map-marker-wrap", html: `<span class="custom-map-pin" style="--custom-marker-color:${record.color || "#7657d9"}"></span>`, iconSize: [28, 36], iconAnchor: [14, 32], tooltipAnchor: [0, -26] });
+    const marker = window.L.marker([record.lat, record.lng], { icon }).addTo(window.customMarkerLayer).bindTooltip(`${record.name || "내 마커"} · 클릭해서 삭제`, { direction: "top", permanent: true, className: "custom-marker-label" });
+    marker.on("click", () => {
+      window.customMarkerLayer.removeLayer(marker);
+      window.customMarkers.delete(marker);
+      window.customMarkerRecords = window.customMarkerRecords.filter((item) => item !== record);
+      window.saveCustomMarkers();
+      updateCustomMarkerClear();
+    });
+    window.customMarkers.add(marker);
+  };
   window.customMarkingMode = false;
   window.customMarkerColor = "#7657d9";
   const colorChoices = ["#7657d9", "#158f96", "#eb7a67", "#e4ad25"];
@@ -312,16 +334,14 @@ function initBusanMap() {
     if (!window.customMarkingMode) return;
     const name = window.prompt("이 마커의 이름을 입력하세요.", "내 마커");
     if (name === null) return;
-    const icon = window.L.divIcon({ className: "custom-map-marker-wrap", html: `<span class="custom-map-pin" style="--custom-marker-color:${window.customMarkerColor}"></span>`, iconSize: [28, 36], iconAnchor: [14, 32], tooltipAnchor: [0, -26] });
-    const marker = window.L.marker(event.latlng, { icon }).addTo(window.customMarkerLayer).bindTooltip(`${name.trim() || "내 마커"} · 클릭해서 삭제`, { direction: "top", permanent: true, className: "custom-marker-label" });
-    marker.on("click", () => {
-      window.customMarkerLayer.removeLayer(marker);
-      window.customMarkers.delete(marker);
-      updateCustomMarkerClear();
-    });
-    window.customMarkers.add(marker);
+    const record = { lat: event.latlng.lat, lng: event.latlng.lng, name: name.trim() || "내 마커", color: window.customMarkerColor };
+    window.customMarkerRecords.push(record);
+    window.renderCustomMarker(record);
+    window.saveCustomMarkers();
     updateCustomMarkerClear();
   });
+  window.customMarkerRecords.forEach((record) => window.renderCustomMarker(record));
+  updateCustomMarkerClear();
   window.setTimeout(() => map.invalidateSize(), 0);
 }
 
@@ -340,6 +360,8 @@ function updateRestaurantMarkerClear() {
 window.clearCustomMarkers = () => {
   window.customMarkerLayer?.clearLayers();
   window.customMarkers?.clear();
+  window.customMarkerRecords = [];
+  window.saveCustomMarkers?.();
   updateCustomMarkerClear();
 };
 
