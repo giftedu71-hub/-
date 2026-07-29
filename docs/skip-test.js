@@ -14,6 +14,7 @@ function renderQuickPicker() {
 window.showQuickType = (key) => {
   const type = quickTypes.find(([itemKey]) => itemKey === key);
   a = type[2];
+  window.quickViewing = true;
   screen = "result";
   render();
   scrollTo(0, 0);
@@ -26,6 +27,22 @@ window.showQuickMap = () => {
   scrollTo(0, 0);
 };
 
+window.backToQuickTypes = () => {
+  window.quickViewing = false;
+  renderQuickPicker();
+};
+
+function addQuickBackButton() {
+  const actions = document.querySelector(".result-actions");
+  if (!window.quickViewing || !actions || actions.querySelector(".quick-back")) return;
+  const button = document.createElement("button");
+  button.className = "ghost quick-back";
+  button.type = "button";
+  button.textContent = "다른 유형 보기";
+  button.addEventListener("click", window.backToQuickTypes);
+  actions.prepend(button);
+}
+
 function addSkipButton() {
   const actions = document.querySelector(".card .actions");
   if (!document.querySelector(".answers") || !actions || document.querySelector(".skip-test")) return;
@@ -37,5 +54,8 @@ function addSkipButton() {
   actions.insertAdjacentElement("afterend", button);
 }
 
-new MutationObserver(addSkipButton).observe(app, { childList: true, subtree: true });
+new MutationObserver(() => { addSkipButton(); addQuickBackButton(); }).observe(app, { childList: true, subtree: true });
+document.addEventListener("click", (event) => {
+  if (event.target.closest("button")?.textContent.trim() === "다시 하기") window.quickViewing = false;
+});
 addSkipButton();
