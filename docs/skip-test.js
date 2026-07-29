@@ -1,0 +1,41 @@
+const quickTypes = [
+  ["quiet", "여유로운 해달형", [1, 1, 1, 1, 1]],
+  ["dadaepo", "낭만적인 해파리형", [2, 2, 1, 1, 2]],
+  ["songdo", "알차게 즐기는 해마형", [2, 2, 2, 2, 2]],
+  ["songjeong", "파도 타는 돌고래형", [3, 2, 2, 2, 3]],
+  ["gwangalli", "감성 타는 가오리형", [3, 3, 3, 3, 2]],
+  ["haeundae", "활기찬 범고래형", [4, 4, 3, 3, 3]],
+];
+
+function renderQuickPicker() {
+  app.innerHTML = head() + `<section class="quick-picker"><p class="eyebrow">SKIP THE TEST</p><h1>궁금한 유형을<br>직접 골라보세요</h1><p>원하는 유형을 누르면 결과와 상세 정보를 바로 볼 수 있어요.</p><div class="quick-grid">${quickTypes.map(([key, name]) => `<button onclick="showQuickType('${key}')"><span class="quick-animal ${key}"></span><strong>${name}</strong><small>${beaches[key].beach}</small></button>`).join("")}</div><button class="primary quick-map" onclick="showQuickMap()">바다 보러가기 →</button></section>`;
+}
+
+window.showQuickType = (key) => {
+  const type = quickTypes.find(([itemKey]) => itemKey === key);
+  a = type[2];
+  screen = "result";
+  render();
+  scrollTo(0, 0);
+};
+
+window.showQuickMap = () => {
+  selected = "haeundae";
+  screen = "map";
+  render();
+  scrollTo(0, 0);
+};
+
+function addSkipButton() {
+  const actions = document.querySelector(".card .actions");
+  if (!document.querySelector(".answers") || !actions || document.querySelector(".skip-test")) return;
+  const button = document.createElement("button");
+  button.className = "skip-test";
+  button.type = "button";
+  button.textContent = "테스트 건너뛰기";
+  button.addEventListener("click", renderQuickPicker);
+  actions.insertAdjacentElement("afterend", button);
+}
+
+new MutationObserver(addSkipButton).observe(app, { childList: true, subtree: true });
+addSkipButton();

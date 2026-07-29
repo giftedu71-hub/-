@@ -363,9 +363,15 @@ export default function Home() {
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [showTypePicker, setShowTypePicker] = useState(false);
+  const [manualResultKey, setManualResultKey] = useState<BeachKey | null>(null);
   const [selectedMapBeach, setSelectedMapBeach] = useState<BeachKey>("haeundae");
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const result = showResult ? calculateResult(answers) : null;
+  const result = showResult
+    ? manualResultKey
+      ? { key: manualResultKey, total: 0, reason: "선택한 유형의 해수욕장 정보를 보고 있어요." }
+      : calculateResult(answers)
+    : null;
   const activeMapBeach =
     mapBeaches.find((beach) => beach.key === selectedMapBeach) ?? mapBeaches[0];
   const resultBeach = result
@@ -400,6 +406,8 @@ export default function Home() {
     setStep(0);
     setShowResult(false);
     setShowMap(false);
+    setShowTypePicker(false);
+    setManualResultKey(null);
     setSelectedMapBeach("haeundae");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -407,6 +415,18 @@ export default function Home() {
   function openMap() {
     if (result) setSelectedMapBeach(result.key);
     setShowMap(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function skipTest() {
+    setShowTypePicker(true);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function chooseType(key: BeachKey) {
+    setManualResultKey(key);
+    setShowTypePicker(false);
+    setShowResult(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -534,6 +554,22 @@ export default function Home() {
             </aside>
           </div>
         </section>
+      ) : showTypePicker ? (
+        <section className="type-picker">
+          <p className="eyebrow">SKIP THE TEST</p>
+          <h1 ref={headingRef} tabIndex={-1}>궁금한 유형을<br />직접 골라보세요</h1>
+          <p>원하는 유형을 누르면 결과와 상세 정보를 바로 볼 수 있어요.</p>
+          <div className="type-picker-grid">
+            {(Object.entries(results) as [BeachKey, (typeof results)[BeachKey]][]).map(([key, item]) => (
+              <button type="button" key={key} onClick={() => chooseType(key)}>
+                <img src={item.image} alt="" />
+                <span>{item.name}</span>
+                <small>{item.beach}</small>
+              </button>
+            ))}
+          </div>
+          <button className="explore-button picker-map-button" type="button" onClick={openMap}>바다 보러가기 <span>→</span></button>
+        </section>
       ) : !showResult ? (
         <section className="quiz-layout">
           <aside className="intro">
@@ -605,6 +641,7 @@ export default function Home() {
                 {step === questions.length - 1 ? "결과 보기" : "다음 질문"} <span>→</span>
               </button>
             </div>
+            <button className="skip-test-button" type="button" onClick={skipTest}>테스트 건너뛰기</button>
           </section>
         </section>
       ) : (
