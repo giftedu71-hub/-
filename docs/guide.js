@@ -39,7 +39,7 @@ function addHaeundaeGuide() {
 function addRestaurantList() {
   const card = document.querySelector(".detail");
   const restaurantData = {
-    "해운대해수욕장": [["신사꽃게탕", "한식"], ["전설의 우대갈비", "한식"], ["금수복국 해운대본점", "한식"], ["해운대암소갈비집", "한식"]],
+    "해운대해수욕장": [["신사꽃게당", "한식", "꽃게탕, 간장게장"], ["전설의 우대갈비 해운대직영점", "한식", "우대갈비"], ["금수복국 해운대본점", "한식", "복국, 복어요리"], ["해운대암소갈비집", "한식", "생갈비, 양념갈비"], ["해운대원조할매국밥", "한식", "소고기국밥, 선지국밥"], ["류센소 본점", "일식", "돈코츠라멘"], ["나마스테 해운대점", "기타", "인도커리, 난"]],
     "광안리해수욕장": [["수변최고돼지국밥 광안점", "한식"], ["톤쇼우 광안점", "일식"]],
     "송정해수욕장": [["문토스트", "기타"], ["송정집", "한식"]],
     "송도해수욕장": [["천하포면 부산송도", "일식"], ["해변횟집", "한식"]],
@@ -54,7 +54,7 @@ function addRestaurantList() {
     const modal = document.createElement("div");
     modal.className = "restaurant-modal-backdrop";
     const categoryCodes = { "한식": "korean", "양식": "western", "일식": "japanese", "중식": "chinese", "기타": "other" };
-    modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span></article>`).join("")}</section>`;
+    modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category, menu]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span><small>${menu || ""}</small></article>`).join("")}</section>`;
     modal.querySelectorAll(".restaurant-filters button").forEach((button) => button.addEventListener("click", () => {
       const filter = button.dataset.filter;
       modal.querySelectorAll(".restaurant-filters button").forEach((item) => item.classList.toggle("selected", item === button));
