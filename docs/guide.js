@@ -259,7 +259,7 @@ function initBusanMap() {
     palette.querySelectorAll("button").forEach((item) => item.classList.toggle("is-selected", item === button));
   }));
   palette.querySelector("button")?.classList.add("is-selected");
-  mapElement.appendChild(palette);
+  mapElement.closest(".map-layout")?.appendChild(palette);
   window.toggleCustomMarking = () => {
     window.customMarkingMode = !window.customMarkingMode;
     const button = document.querySelector(".custom-marker-toggle");
@@ -285,8 +285,8 @@ function initBusanMap() {
     const icon = window.L.divIcon({
       className: "beach-map-marker-wrap",
       html: `<span class="beach-map-pin"></span><span class="beach-map-label">${name}</span>`,
-      iconSize: [92, 47],
-      iconAnchor: [46, 44],
+      iconSize: [110, 52],
+      iconAnchor: [55, 49],
     });
     const marker = window.L.marker([lat, lng], { icon }).addTo(map);
     marker.on("click", () => window.pick(key));
@@ -328,10 +328,8 @@ window.clearCustomMarkers = () => {
 
 function updateCustomMarkerClear() {
   const button = document.querySelector(".custom-marker-clear");
-  const panel = document.querySelector(".map-panel");
   const hasMarkers = window.customMarkers?.size > 0;
   if (button) button.hidden = !hasMarkers;
-  panel?.classList.toggle("has-custom-markers", hasMarkers);
 }
 
 const fixedPlaceAddresses = {
@@ -414,14 +412,14 @@ function addCustomMarkerToggle() {
 }
 
 function addCustomMarkerClear() {
-  const panel = document.querySelector(".map-panel");
-  if (!panel || panel.querySelector(".custom-marker-clear")) return;
+  const layout = document.querySelector(".map-layout");
+  if (!layout || layout.querySelector(".custom-marker-clear")) return;
   const button = document.createElement("button");
   button.className = "ghost custom-marker-clear";
   button.type = "button";
-  button.textContent = "내 마킹 삭제";
+  button.textContent = "내 마킹 일괄삭제";
   button.addEventListener("click", () => window.clearCustomMarkers?.());
-  panel.appendChild(button);
+  layout.appendChild(button);
   updateCustomMarkerClear();
 }
 
