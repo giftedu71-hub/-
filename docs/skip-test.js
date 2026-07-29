@@ -29,13 +29,15 @@ window.showQuickMap = () => {
   scrollTo(0, 0);
 };
 
-window.backToQuickTypes = () => {
-  if (!window.myResultAnswers && screen === "result" && !window.quickViewing) window.myResultAnswers = [...a];
-  if (window.myResultAnswers) window.browsingTypesFromResult = true;
+window.showOtherTypes = () => {
+  if (!window.myResultAnswers || !window.relatedTypeViewing) window.myResultAnswers = [...a];
+  window.browsingTypesFromResult = true;
   window.quickViewing = false;
   window.relatedTypeViewing = false;
   renderQuickPicker();
 };
+
+window.backToQuickTypes = window.showOtherTypes;
 
 window.backToMyResult = () => {
   if (!window.myResultAnswers) return;
@@ -55,7 +57,7 @@ function addQuickBackButton() {
   button.className = "ghost quick-back";
   button.type = "button";
   button.textContent = "다른 유형 보기";
-  button.addEventListener("click", window.backToQuickTypes);
+  button.addEventListener("click", window.showOtherTypes);
   actions.prepend(button);
 }
 
