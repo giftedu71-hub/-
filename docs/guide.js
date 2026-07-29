@@ -382,15 +382,16 @@ function addTypeRelations() {
   if (!resultCard || !animal || !recommend || resultCard.querySelector(".type-relations")) return;
   const key = ["quiet", "dadaepo", "songdo", "songjeong", "gwangalli", "haeundae"].find((item) => animal.classList.contains(item));
   const relations = {
-    quiet: ["낭만적인 해파리형", "활기찬 범고래형"], dadaepo: ["여유로운 해달형", "활기찬 범고래형"],
-    songdo: ["감성 타는 가오리형", "여유로운 해달형"], songjeong: ["감성 타는 가오리형", "여유로운 해달형"],
-    gwangalli: ["활기찬 범고래형", "여유로운 해달형"], haeundae: ["감성 타는 가오리형", "여유로운 해달형"],
+    quiet: [["dadaepo", "낭만적인 해파리형"], ["haeundae", "활기찬 범고래형"]], dadaepo: [["quiet", "여유로운 해달형"], ["haeundae", "활기찬 범고래형"]],
+    songdo: [["gwangalli", "감성 타는 가오리형"], ["quiet", "여유로운 해달형"]], songjeong: [["gwangalli", "감성 타는 가오리형"], ["quiet", "여유로운 해달형"]],
+    gwangalli: [["haeundae", "활기찬 범고래형"], ["quiet", "여유로운 해달형"]], haeundae: [["gwangalli", "감성 타는 가오리형"], ["quiet", "여유로운 해달형"]],
   };
   const [similar, opposite] = relations[key] || [];
   if (!similar || !opposite) return;
   const section = document.createElement("section");
   section.className = "type-relations";
-  section.innerHTML = `<article><span>비슷한 취향</span><strong>${similar}</strong></article><article><span>반대되는 취향</span><strong>${opposite}</strong></article>`;
+  section.innerHTML = `<button type="button" data-type="${similar[0]}"><span>비슷한 유형</span><strong>${similar[1]}</strong></button><button type="button" data-type="${opposite[0]}"><span>반대되는 유형</span><strong>${opposite[1]}</strong></button>`;
+  section.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type)));
   recommend.insertAdjacentElement("afterend", section);
 }
 
