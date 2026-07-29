@@ -38,7 +38,14 @@ function addHaeundaeGuide() {
 
 function addRestaurantList() {
   const card = document.querySelector(".detail");
-  if (!card || card.querySelector(".restaurant-tag") || card.querySelector("h2")?.textContent.trim() !== "해운대해수욕장") return;
+  const restaurantData = {
+    "해운대해수욕장": [["신사꽃게탕", "한식"], ["전설의 우대갈비", "한식"], ["금수복국 해운대본점", "한식"], ["해운대암소갈비집", "한식"]],
+    "광안리해수욕장": [["수변최고돼지국밥 광안점", "한식"], ["톤쇼우 광안점", "일식"]],
+    "송정해수욕장": [["문토스트", "기타"], ["송정집", "한식"]],
+    "송도해수욕장": [["천하포면 부산송도", "일식"], ["해변횟집", "한식"]],
+  };
+  const title = card?.querySelector("h2")?.textContent.trim();
+  if (!card || card.querySelector(".restaurant-tag") || !restaurantData[title]) return;
   const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("맛집"));
   if (!tag) return;
   tag.classList.add("restaurant-tag");
@@ -46,7 +53,7 @@ function addRestaurantList() {
     document.querySelector(".restaurant-modal-backdrop")?.remove();
     const modal = document.createElement("div");
     modal.className = "restaurant-modal-backdrop";
-    modal.innerHTML = '<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="해운대 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>HAEUNDAE FOOD PICK</p><h3>해운대 맛집 추천</h3><article><strong>신사꽃게탕</strong><span>한식</span></article><article><strong>전설의 우대갈비</strong><span>한식</span></article><article><strong>금수복국 해운대본점</strong><span>한식</span></article><article><strong>해운대암소갈비집</strong><span>한식</span></article></section>';
+    modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3>${restaurantData[title].map(([name, category]) => `<article><strong>${name}</strong><span>${category}</span></article>`).join("")}</section>`;
     modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".restaurant-close")) modal.remove(); });
     document.body.appendChild(modal);
   });

@@ -262,6 +262,21 @@ const mapBeaches: Array<{
   },
 ];
 
+const restaurantCategories = [
+  { key: "all", label: "전체" }, { key: "korean", label: "한식" }, { key: "western", label: "양식" },
+  { key: "japanese", label: "일식" }, { key: "chinese", label: "중식" }, { key: "other", label: "기타" },
+] as const;
+const haeundaeRestaurants = [
+  { name: "신사꽃게탕", category: "korean" }, { name: "전설의 우대갈비", category: "korean" },
+  { name: "금수복국 해운대본점", category: "korean" }, { name: "해운대암소갈비집", category: "korean" },
+];
+const beachRestaurants: Partial<Record<BeachKey, { name: string; category: string }[]>> = {
+  haeundae: haeundaeRestaurants,
+  gwangalli: [{ name: "수변최고돼지국밥 광안점", category: "korean" }, { name: "톤쇼우 광안점", category: "japanese" }],
+  songjeong: [{ name: "문토스트", category: "other" }, { name: "송정집", category: "korean" }],
+  songdo: [{ name: "천하포면 부산송도", category: "japanese" }, { name: "해변횟집", category: "korean" }],
+};
+
 function baseResult(total: number): BeachKey {
   if (total <= 7) return "quiet";
   if (total <= 9) return "dadaepo";
@@ -373,6 +388,8 @@ export default function Home() {
   const [manualResultKey, setManualResultKey] = useState<BeachKey | null>(null);
   const [selectedMapBeach, setSelectedMapBeach] = useState<BeachKey>("haeundae");
   const [showRestaurants, setShowRestaurants] = useState(false);
+  const [restaurantCategory, setRestaurantCategory] = useState<string>("all");
+  const [restaurantBeach, setRestaurantBeach] = useState<BeachKey>("haeundae");
   const headingRef = useRef<HTMLHeadingElement>(null);
   const result = showResult
     ? manualResultKey
@@ -549,8 +566,8 @@ export default function Home() {
                     <dt>주변 시설</dt>
                     <dd>
                       {activeMapBeach.facilities.map((facility) => (
-                        activeMapBeach.key === "haeundae" && facility.startsWith("🍽") ? (
-                          <button className="restaurant-tag" type="button" key={facility} onClick={() => setShowRestaurants(true)}>
+                        beachRestaurants[activeMapBeach.key] && facility.startsWith("🍽") ? (
+                          <button className="restaurant-tag" type="button" key={facility} onClick={() => { setRestaurantBeach(activeMapBeach.key); setRestaurantCategory("all"); setShowRestaurants(true); }}>
                             {facility}
                           </button>
                         ) : <span key={facility}>{facility}</span>
@@ -558,16 +575,19 @@ export default function Home() {
                     </dd>
                   </div>
                 </dl>
-                {activeMapBeach.key === "haeundae" && showRestaurants && (
+                {showRestaurants && (
                   <div className="restaurant-modal-backdrop" role="presentation" onClick={() => setShowRestaurants(false)}>
                     <section className="restaurant-modal" role="dialog" aria-modal="true" aria-label="해운대 맛집 추천" onClick={(event) => event.stopPropagation()}>
                       <button className="restaurant-close" type="button" aria-label="맛집 목록 닫기" onClick={() => setShowRestaurants(false)}>×</button>
-                      <p>HAEUNDAE FOOD PICK</p>
-                      <h3>해운대 맛집 추천</h3>
-                      <article><strong>신사꽃게탕</strong><span>한식</span></article>
-                      <article><strong>전설의 우대갈비</strong><span>한식</span></article>
-                      <article><strong>금수복국 해운대본점</strong><span>한식</span></article>
-                      <article><strong>해운대암소갈비집</strong><span>한식</span></article>
+                      <p>BEACH FOOD PICK</p>
+                      <h3>{mapBeaches.find((beach) => beach.key === restaurantBeach)?.shortName} 맛집 추천</h3>
+                      <div className="restaurant-filters">
+                        {restaurantCategories.map((category) => <button key={category.key} type="button" className={restaurantCategory === category.key ? "selected" : ""} onClick={() => setRestaurantCategory(category.key)}>{category.label}</button>)}
+                      </div>
+                      {(beachRestaurants[restaurantBeach] ?? []).filter((restaurant) => restaurantCategory === "all" || restaurant.category === restaurantCategory).map((restaurant) => (
+                        <article key={restaurant.name}><strong>{restaurant.name}</strong><span>{restaurantCategories.find((category) => category.key === restaurant.category)?.label}</span></article>
+                      ))}
+                      {restaurantCategory !== "all" && (beachRestaurants[restaurantBeach] ?? []).every((restaurant) => restaurant.category !== restaurantCategory) && <p className="empty-category">등록된 음식점이 없어요.</p>}
                     </section>
                   </div>
                 )}
