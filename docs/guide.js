@@ -375,12 +375,33 @@ function addBeachQuickSelector() {
   heading.querySelector("p:last-of-type")?.insertAdjacentElement("afterend", selector);
 }
 
+function addTypeRelations() {
+  const resultCard = document.querySelector(".result-card");
+  const animal = resultCard?.querySelector(".animal");
+  const recommend = resultCard?.querySelector(".recommend");
+  if (!resultCard || !animal || !recommend || resultCard.querySelector(".type-relations")) return;
+  const key = ["quiet", "dadaepo", "songdo", "songjeong", "gwangalli", "haeundae"].find((item) => animal.classList.contains(item));
+  const relations = {
+    quiet: ["낭만적인 해파리형", "활기찬 범고래형"], dadaepo: ["여유로운 해달형", "활기찬 범고래형"],
+    songdo: ["감성 타는 가오리형", "여유로운 해달형"], songjeong: ["감성 타는 가오리형", "여유로운 해달형"],
+    gwangalli: ["활기찬 범고래형", "여유로운 해달형"], haeundae: ["감성 타는 가오리형", "여유로운 해달형"],
+  };
+  const [similar, opposite] = relations[key] || [];
+  if (!similar || !opposite) return;
+  const section = document.createElement("section");
+  section.className = "type-relations";
+  section.innerHTML = `<article><span>비슷한 취향</span><strong>${similar}</strong></article><article><span>반대되는 취향</span><strong>${opposite}</strong></article>`;
+  recommend.insertAdjacentElement("afterend", section);
+}
+
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
 initBusanMap();
 new MutationObserver(addRestaurantMarkerClear).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addRestaurantMarkerClear();
 new MutationObserver(addBeachQuickSelector).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addBeachQuickSelector();
+new MutationObserver(addTypeRelations).observe(document.querySelector("#app"), { childList: true, subtree: true });
+addTypeRelations();
 
 // 자유이용권도 요금표와 같이 대인과 소인 금액을 나누어 보여 준다.
 new MutationObserver(() => {
