@@ -149,6 +149,17 @@ function addCafeList() {
       link.textContent = nameElement.textContent;
       nameElement.replaceWith(link);
     });
+    modal.querySelectorAll("article").forEach((article) => {
+      const name = article.querySelector("strong, .cafe-link")?.textContent;
+      if (!name) return;
+      const button = document.createElement("button");
+      button.className = "restaurant-map-button cafe-map-button";
+      button.type = "button";
+      button.dataset.restaurantName = name;
+      button.textContent = window.restaurantMarkers?.has(name) ? "표시삭제" : "지도 표시";
+      button.addEventListener("click", () => window.toggleRestaurantMarker?.(name, button));
+      article.appendChild(button);
+    });
     modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".cafe-close")) modal.remove(); });
     document.body.appendChild(modal);
   });
