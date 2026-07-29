@@ -28,6 +28,7 @@ window.showQuickMap = () => {
   selected = "haeundae";
   screen = "map";
   render();
+  window.setTimeout(() => window.showAllBeaches?.(), 0);
   scrollTo(0, 0);
 };
 
