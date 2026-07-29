@@ -123,6 +123,14 @@ function markInteractiveFacilities() {
 new MutationObserver(markInteractiveFacilities).observe(document.querySelector("#app"), { childList: true, subtree: true });
 markInteractiveFacilities();
 
+// 자유이용권도 요금표와 같이 대인과 소인 금액을 나누어 보여 준다.
+new MutationObserver(() => {
+  const pass = document.querySelector(".cable-modal .cable-wide");
+  if (!pass || pass.classList.contains("cable-pass")) return;
+  pass.classList.add("cable-pass");
+  pass.innerHTML = "<strong>\uC790\uC720\uC774\uC6A9\uAD8C</strong><span><b>\uB300\uC778</b>35,000\uC6D0</span><span><b>\uC18C\uC778</b>30,000\uC6D0</span><small>\uC6D0\uD558\uB294 \uCE90\uBE48\uC744 \uD558\uB8E8 \uB3D9\uC548 \uBB34\uC81C\uD55C \uD0D1\uC2B9 \u00B7 \uD3C9\uC77C \uC804\uC6A9</small>";
+}).observe(document.body, { childList: true, subtree: true });
+
 // 필터를 버튼의 실제 선택 결과에 맞춰 명시적으로 다시 적용한다.
 document.addEventListener("click", (event) => {
   const button = event.target.closest(".restaurant-filters button");
