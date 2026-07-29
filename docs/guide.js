@@ -36,5 +36,22 @@ function addHaeundaeGuide() {
   title.insertAdjacentElement("afterend", link);
 }
 
-new MutationObserver(addHaeundaeGuide).observe(document.querySelector("#app"), { childList: true, subtree: true });
+function addRestaurantList() {
+  const card = document.querySelector(".detail");
+  if (!card || card.querySelector(".restaurant-tag") || card.querySelector("h2")?.textContent.trim() !== "해운대해수욕장") return;
+  const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("맛집"));
+  if (!tag) return;
+  tag.classList.add("restaurant-tag");
+  tag.addEventListener("click", () => {
+    const existing = card.querySelector(".restaurant-list");
+    if (existing) return existing.remove();
+    const list = document.createElement("section");
+    list.className = "restaurant-list";
+    list.innerHTML = '<h3>해운대 맛집 추천</h3><article><strong>해운대기와집대구탕</strong><span>🐟 대구탕 · 달맞이길</span></article><article><strong>금수복국 해운대본점</strong><span>🍲 복국 · 해운대 해변 인근</span></article><article><strong>이씨할매횟집</strong><span>🦪 회 · 미포항 인근</span></article><p>방문 전 영업시간과 휴무일을 확인해 주세요.</p>';
+    card.appendChild(list);
+  });
+}
+
+new MutationObserver(() => { addHaeundaeGuide(); addRestaurantList(); }).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addHaeundaeGuide();
+addRestaurantList();

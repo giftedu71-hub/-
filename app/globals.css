@@ -1021,6 +1021,24 @@ button:focus-visible,
   white-space: nowrap;
 }
 
+.facility-detail .restaurant-tag {
+  padding: 6px 8px;
+  color: #496568;
+  border: 1px solid #dce9e4;
+  border-radius: 8px;
+  background: white;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.restaurant-list { margin-top: 14px; padding: 13px; border: 1px solid #dfeae5; border-radius: 12px; background: white; }
+.restaurant-list h3 { margin: 0 0 8px; font-size: 13px; }
+.restaurant-list article { display: flex; padding: 8px 0; border-top: 1px solid #edf2ef; align-items: center; justify-content: space-between; gap: 8px; }
+.restaurant-list article strong { font-size: 11px; }
+.restaurant-list article span,.restaurant-list > p { color: #718788; font-size: 9px; }
+.restaurant-list > p { margin: 8px 0 0; }
+
 .night-view {
   margin: 16px 0 0;
   overflow: hidden;

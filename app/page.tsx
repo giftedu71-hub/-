@@ -372,6 +372,7 @@ export default function Home() {
   const [showTypePicker, setShowTypePicker] = useState(false);
   const [manualResultKey, setManualResultKey] = useState<BeachKey | null>(null);
   const [selectedMapBeach, setSelectedMapBeach] = useState<BeachKey>("haeundae");
+  const [showRestaurants, setShowRestaurants] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const result = showResult
     ? manualResultKey
@@ -548,11 +549,24 @@ export default function Home() {
                     <dt>주변 시설</dt>
                     <dd>
                       {activeMapBeach.facilities.map((facility) => (
-                        <span key={facility}>{facility}</span>
+                        activeMapBeach.key === "haeundae" && facility.startsWith("🍽") ? (
+                          <button className="restaurant-tag" type="button" key={facility} onClick={() => setShowRestaurants((current) => !current)}>
+                            {facility} {showRestaurants ? "−" : "+"}
+                          </button>
+                        ) : <span key={facility}>{facility}</span>
                       ))}
                     </dd>
                   </div>
                 </dl>
+                {activeMapBeach.key === "haeundae" && showRestaurants && (
+                  <section className="restaurant-list" aria-label="해운대 맛집 추천">
+                    <h3>해운대 맛집 추천</h3>
+                    <article><strong>해운대기와집대구탕</strong><span>🐟 대구탕 · 달맞이길</span></article>
+                    <article><strong>금수복국 해운대본점</strong><span>🍲 복국 · 해운대 해변 인근</span></article>
+                    <article><strong>이씨할매횟집</strong><span>🦪 회 · 미포항 인근</span></article>
+                    <p>방문 전 영업시간과 휴무일을 확인해 주세요.</p>
+                  </section>
+                )}
               </div>
               <figure className="night-view" key={`${activeMapBeach.key}-night`}>
                 <figcaption>
