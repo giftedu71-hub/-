@@ -237,6 +237,10 @@ function initBusanMap() {
   const focus = beachFocus[selectedTitle];
   const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView(focus || [35.158, 129.105], focus ? 14 : 11);
   window.busanLeafletMap = map;
+  window.showAllBeaches = () => {
+    map.flyTo([35.158, 129.105], 11, { duration: 0.7 });
+    document.querySelectorAll(".beach-quick-selector button").forEach((button) => button.classList.toggle("active", button.dataset.key === "all"));
+  };
   window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
   window.restaurantMarkers = new Map();
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -288,7 +292,7 @@ const fixedPlaceAddresses = {
 
 const fixedPlaceCoordinates = {
   "금수복국 해운대본점": [35.1621620, 129.1642443], "해운대암소갈비집": [35.1633332, 129.1656741], "해운대원조할매국밥": [35.1627301, 129.1609919], "톤쇼우 광안점": [35.1563957, 129.1248902], "언양불고기 부산집": [35.1492695, 129.1129034], "수변최고돼지국밥 민락본점": [35.1560780, 129.1341146],
-  "하삼동커피 송정점": [35.1829854, 129.2028381], "스타벅스 해운대점": [35.1616735, 129.1603502], "산리오 러버스 클럽 해운대점": [35.1636139, 129.1565233], "로우앤스윗 해리단길점": [35.1648920, 129.1580299], "엣지993": [35.1578569, 129.1723282],
+  "송정집": [35.17686779660262, 129.19681887567634], "하삼동커피 송정점": [35.1829854, 129.2028381], "스타벅스 해운대점": [35.1616735, 129.1603502], "산리오 러버스 클럽 해운대점": [35.1636139, 129.1565233], "로우앤스윗 해리단길점": [35.1648920, 129.1580299], "엣지993": [35.1578569, 129.1723282],
   "샌디스": [35.1384781, 129.1129089], "별침대": [35.1557532, 129.1245832], "카페오뜨 광안비치점": [35.1557220, 129.1325461],
 };
 
@@ -330,34 +334,41 @@ window.toggleRestaurantMarker = async (name, button) => {
 };
 
 function addRestaurantMarkerClear() {
-  const heading = document.querySelector(".map-heading");
-  if (!heading || heading.querySelector(".restaurant-marker-clear")) return;
+  const panel = document.querySelector(".map-panel");
+  if (!panel || panel.querySelector(".restaurant-marker-clear")) return;
   const button = document.createElement("button");
   button.className = "ghost restaurant-marker-clear";
   button.type = "button";
   button.textContent = "일괄 표시삭제";
   button.addEventListener("click", () => window.clearRestaurantMarkers?.());
-  heading.querySelector("p:last-of-type")?.insertAdjacentElement("afterend", button);
+  panel.querySelector(".detail")?.insertAdjacentElement("beforebegin", button);
   updateRestaurantMarkerClear();
 }
 
 function addBeachQuickSelector() {
-  const panel = document.querySelector(".map-panel");
+  const heading = document.querySelector(".map-heading");
   const activeTitle = document.querySelector(".detail h2")?.textContent.trim();
-  if (!panel || !activeTitle || panel.querySelector(".beach-quick-selector")) return;
+  if (!heading || !activeTitle || heading.querySelector(".beach-quick-selector")) return;
   const beaches = [["haeundae", "해운대해수욕장"], ["gwangalli", "광안리해수욕장"], ["songjeong", "송정해수욕장"], ["songdo", "송도해수욕장"], ["dadaepo", "다대포해수욕장"], ["quiet", "임랑·일광해수욕장"]];
   const selector = document.createElement("div");
   selector.className = "beach-quick-selector";
   selector.setAttribute("aria-label", "해수욕장 빠른 선택");
+  const allButton = document.createElement("button");
+  allButton.type = "button";
+  allButton.dataset.key = "all";
+  allButton.textContent = "전체";
+  allButton.addEventListener("click", () => window.showAllBeaches?.());
+  selector.appendChild(allButton);
   beaches.forEach(([key, title]) => {
     const button = document.createElement("button");
     button.type = "button";
+    button.dataset.key = key;
     button.className = title === activeTitle ? "active" : "";
     button.textContent = title.replace("해수욕장", "");
     button.addEventListener("click", () => window.pick(key));
     selector.appendChild(button);
   });
-  panel.querySelector(".detail")?.insertAdjacentElement("beforebegin", selector);
+  heading.querySelector("p:last-of-type")?.insertAdjacentElement("afterend", selector);
 }
 
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
