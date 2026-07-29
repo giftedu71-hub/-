@@ -239,6 +239,9 @@ function initBusanMap() {
   window.busanLeafletMap = map;
   window.showAllBeaches = () => {
     map.flyTo([35.158, 129.105], 11, { duration: 0.7 });
+    const layout = mapElement.closest(".map-layout");
+    layout?.classList.add("all-beaches");
+    window.setTimeout(() => map.invalidateSize(), 0);
     document.querySelectorAll(".beach-quick-selector button").forEach((button) => button.classList.toggle("active", button.dataset.key === "all"));
   };
   window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
@@ -273,6 +276,19 @@ function initBusanMap() {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
   }).addTo(map);
+  const fullscreenButton = document.createElement("button");
+  fullscreenButton.className = "map-fullscreen-toggle";
+  fullscreenButton.type = "button";
+  fullscreenButton.textContent = "전체 화면";
+  fullscreenButton.setAttribute("aria-label", "지도 전체 화면으로 보기");
+  fullscreenButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const active = mapElement.classList.toggle("is-map-fullscreen");
+    fullscreenButton.textContent = active ? "전체 화면 닫기" : "전체 화면";
+    fullscreenButton.setAttribute("aria-label", active ? "지도 전체 화면 닫기" : "지도 전체 화면으로 보기");
+    window.setTimeout(() => map.invalidateSize(), 0);
+  });
+  mapElement.appendChild(fullscreenButton);
 
   const beaches = [
     ["haeundae", "해운대", 35.1587, 129.1604],

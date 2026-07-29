@@ -91,7 +91,7 @@ function showSkipConfirmation() {
   document.querySelector(".skip-confirm-backdrop")?.remove();
   const dialog = document.createElement("div");
   dialog.className = "skip-confirm-backdrop";
-  dialog.innerHTML = '<section class="skip-confirm" role="dialog" aria-modal="true" aria-label="테스트 건너뛰기 확인"><p>TEST SKIP</p><h3>테스트를 건너뛰시겠습니까?</h3><span>유형을 직접 골라 결과를 확인할 수 있어요.</span><div><button type="button" class="ghost skip-no">아니요</button><button type="button" class="primary skip-yes">예</button></div></section>';
+  dialog.innerHTML = '<section class="skip-confirm" role="dialog" aria-modal="true" aria-label="테스트 건너뛰기 확인"><p>TEST SKIP</p><h3>테스트를 건너뛰시겠습니까?</h3><span>유형을 직접 골라 결과를 확인할 수 있어요.</span><div><button type="button" class="primary skip-yes">예</button><button type="button" class="ghost skip-no">아니요</button></div></section>';
   dialog.querySelector(".skip-no")?.addEventListener("click", () => dialog.remove());
   dialog.querySelector(".skip-yes")?.addEventListener("click", () => {
     window.hasTestResult = false;
