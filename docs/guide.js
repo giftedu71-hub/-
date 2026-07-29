@@ -379,7 +379,8 @@ function addTypeRelations() {
   const resultCard = document.querySelector(".result-card");
   const animal = resultCard?.querySelector(".animal");
   const recommend = resultCard?.querySelector(".recommend");
-  if (!resultCard || !animal || !recommend || resultCard.querySelector(".type-relations")) return;
+  const resultInfo = resultCard?.querySelector(".result-info");
+  if (!resultCard || !animal || !recommend || !resultInfo || resultCard.querySelector(".type-relations")) return;
   const key = ["quiet", "dadaepo", "songdo", "songjeong", "gwangalli", "haeundae"].find((item) => animal.classList.contains(item));
   const relations = {
     quiet: [["dadaepo", "낭만적인 해파리형"], ["haeundae", "활기찬 범고래형"]], dadaepo: [["quiet", "여유로운 해달형"], ["haeundae", "활기찬 범고래형"]],
@@ -393,7 +394,7 @@ function addTypeRelations() {
   section.innerHTML = `<button type="button" data-type="${similar[0]}"><span>비슷한 유형</span><strong>${similar[1]}</strong></button><button type="button" data-type="${opposite[0]}"><span>반대되는 유형</span><strong>${opposite[1]}</strong></button>`;
   section.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => window.showQuickType?.(button.dataset.type)));
   animal.insertAdjacentElement("afterend", recommend);
-  recommend.insertAdjacentElement("afterend", section);
+  resultInfo.insertAdjacentElement("afterend", section);
 }
 
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
