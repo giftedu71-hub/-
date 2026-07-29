@@ -143,11 +143,12 @@ markInteractiveFacilities();
 
 function addFacilityHint() {
   const tags = document.querySelector(".detail .row.facility .tags");
-  if (!tags || tags.parentElement?.querySelector(".facility-hint")) return;
+  const row = tags?.closest(".row");
+  if (!tags || !row || row.nextElementSibling?.classList.contains("facility-hint")) return;
   const hint = document.createElement("small");
   hint.className = "facility-hint";
   hint.textContent = "(색있는 카테고리를 클릭해보세요)";
-  tags.insertAdjacentElement("afterend", hint);
+  row.insertAdjacentElement("afterend", hint);
 }
 
 new MutationObserver(addFacilityHint).observe(document.querySelector("#app"), { childList: true, subtree: true });
