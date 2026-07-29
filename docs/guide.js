@@ -313,6 +313,21 @@ function initBusanMap() {
     window.setTimeout(() => map.invalidateSize(), 0);
   });
   mapElement.appendChild(fullscreenButton);
+  if (!window.mapFullscreenEscapeBound) {
+    window.mapFullscreenEscapeBound = true;
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      const activeMap = document.querySelector(".busan-map.is-map-fullscreen");
+      if (!activeMap) return;
+      activeMap.classList.remove("is-map-fullscreen");
+      const button = activeMap.querySelector(".map-fullscreen-toggle");
+      if (button) {
+        button.textContent = "전체 화면";
+        button.setAttribute("aria-label", "지도 전체 화면으로 보기");
+      }
+      window.setTimeout(() => window.busanLeafletMap?.invalidateSize(), 0);
+    });
+  }
 
   const beaches = [
     ["haeundae", "해운대", 35.1587, 129.1604],
