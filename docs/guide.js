@@ -286,8 +286,8 @@ function initBusanMap() {
     const icon = window.L.divIcon({
       className: "beach-map-marker-wrap",
       html: `<span class="beach-map-pin"></span><span class="beach-map-label">${name}</span>`,
-      iconSize: [110, 52],
-      iconAnchor: [55, 49],
+      iconSize: [124, 57],
+      iconAnchor: [62, 54],
     });
     const marker = window.L.marker([lat, lng], { icon }).addTo(map);
     marker.on("click", () => window.pick(key));
