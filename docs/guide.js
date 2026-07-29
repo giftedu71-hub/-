@@ -124,6 +124,38 @@ function markInteractiveFacilities() {
 new MutationObserver(markInteractiveFacilities).observe(document.querySelector("#app"), { childList: true, subtree: true });
 markInteractiveFacilities();
 
+// OpenStreetMap 타일을 사용하는 실제 부산 지도
+function initBusanMap() {
+  const mapElement = document.querySelector(".busan-map");
+  if (!mapElement || mapElement.dataset.leafletReady || !window.L) return;
+
+  mapElement.dataset.leafletReady = "true";
+  mapElement.classList.add("actual-map");
+  mapElement.innerHTML = "";
+  const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView([35.158, 129.105], 11);
+  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(map);
+
+  const beaches = [
+    ["haeundae", "해운대", 35.1587, 129.1604],
+    ["gwangalli", "광안리", 35.1532, 129.1186],
+    ["songjeong", "송정", 35.1783, 129.1994],
+    ["songdo", "송도", 35.0773, 129.0207],
+    ["dadaepo", "다대포", 35.0465, 128.9678],
+    ["quiet", "임랑·일광", 35.2900, 129.2520],
+  ];
+  beaches.forEach(([key, name, lat, lng]) => {
+    const marker = window.L.marker([lat, lng]).addTo(map).bindTooltip(name, { direction: "top", offset: [0, -28] });
+    marker.on("click", () => window.pick(key));
+  });
+  window.setTimeout(() => map.invalidateSize(), 0);
+}
+
+new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
+initBusanMap();
+
 // 자유이용권도 요금표와 같이 대인과 소인 금액을 나누어 보여 준다.
 new MutationObserver(() => {
   const pass = document.querySelector(".cable-modal .cable-wide");
