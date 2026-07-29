@@ -708,11 +708,9 @@ export default function Home() {
               </div>
 
               <div className="result-actions">
-                {manualResultKey && (
-                  <button className="explore-button" type="button" onClick={() => { setShowResult(false); setShowTypePicker(true); }}>
-                    다른 유형 보기 <span>→</span>
-                  </button>
-                )}
+                <button className="explore-button" type="button" onClick={() => { setShowResult(false); setShowTypePicker(true); }}>
+                  다른 유형 보기 <span>→</span>
+                </button>
                 <button className="restart-button" type="button" onClick={reset}>
                   다시 하기 <span>↻</span>
                 </button>

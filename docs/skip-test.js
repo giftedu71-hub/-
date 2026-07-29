@@ -34,7 +34,7 @@ window.backToQuickTypes = () => {
 
 function addQuickBackButton() {
   const actions = document.querySelector(".result-actions");
-  if (!window.quickViewing || !actions || actions.querySelector(".quick-back")) return;
+  if (!actions || actions.querySelector(".quick-back")) return;
   const button = document.createElement("button");
   button.className = "ghost quick-back";
   button.type = "button";
