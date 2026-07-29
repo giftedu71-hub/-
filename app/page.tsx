@@ -587,7 +587,6 @@ export default function Home() {
                       {(beachRestaurants[restaurantBeach] ?? []).filter((restaurant) => restaurantCategory === "all" || restaurant.category === restaurantCategory).map((restaurant) => (
                         <article key={restaurant.name}><strong>{restaurant.name}</strong><span>{restaurantCategories.find((category) => category.key === restaurant.category)?.label}</span></article>
                       ))}
-                      {restaurantCategory !== "all" && (beachRestaurants[restaurantBeach] ?? []).every((restaurant) => restaurant.category !== restaurantCategory) && <p className="empty-category">등록된 음식점이 없어요.</p>}
                     </section>
                   </div>
                 )}

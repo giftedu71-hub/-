@@ -54,13 +54,11 @@ function addRestaurantList() {
     const modal = document.createElement("div");
     modal.className = "restaurant-modal-backdrop";
     const categoryCodes = { "한식": "korean", "양식": "western", "일식": "japanese", "중식": "chinese", "기타": "other" };
-    modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span></article>`).join("")}<p class="empty-category" hidden>등록된 음식점이 없어요.</p></section>`;
+    modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span></article>`).join("")}</section>`;
     modal.querySelectorAll(".restaurant-filters button").forEach((button) => button.addEventListener("click", () => {
       const filter = button.dataset.filter;
       modal.querySelectorAll(".restaurant-filters button").forEach((item) => item.classList.toggle("selected", item === button));
-      let visibleCount = 0;
-      modal.querySelectorAll("article[data-category]").forEach((item) => { const visible = filter === "all" || item.dataset.category === filter; item.hidden = !visible; if (visible) visibleCount++; });
-      modal.querySelector(".empty-category").hidden = visibleCount !== 0;
+      modal.querySelectorAll("article[data-category]").forEach((item) => { item.hidden = !(filter === "all" || item.dataset.category === filter); });
     }));
     modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".restaurant-close")) modal.remove(); });
     document.body.appendChild(modal);
