@@ -215,7 +215,7 @@ document.addEventListener("click", (event) => {
   document.querySelector(".walk-modal-backdrop")?.remove();
   const modal = document.createElement("div");
   modal.className = "walk-modal-backdrop";
-  modal.innerHTML = `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong></article></section>`;
+  modal.innerHTML = `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong><small>4월 말부터 10월까지 정기적으로 펼쳐지는 화려한 분수쇼 (월요일은 휴무)</small></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong><small>광활한 갈대밭, 갯벌 생태계, 그리고 아름다운 낙조(일몰)를 함께 즐길 수 있는 대표적인 친환경 명소</small></article></section>`;
   modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".walk-close")) modal.remove(); });
   document.body.appendChild(modal);
 });
