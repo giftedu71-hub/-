@@ -15,13 +15,24 @@ function addHaeundaeGuide() {
   const beachTitle = title.textContent.trim();
   const photoName = photoNames[beachTitle];
   if (photoName) {
-    if (beachTitle === "송정해수욕장") {
+    const localGuideLinks = {
+      "송정해수욕장": {
+        url: "https://www.haeundae.go.kr/tour/index.do?menuCd=DOM_000000302002002000",
+        note: "사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.",
+      },
+      "송도해수욕장": {
+        url: "https://www.bsseogu.go.kr/tour/board/view.bsseogu?boardId=BBS_0000078&menuCd=DOM_000000304011000000&paging=ok&startPage=1&dataSid=5006",
+        note: "사진을 누르면 이용안내(운영현황, 분수가동시간 등)를 볼 수 있어요.",
+      },
+    };
+    const localGuide = localGuideLinks[beachTitle];
+    if (localGuide) {
       const guide = document.createElement("a");
       guide.className = "haeundae-guide beach-guide";
-      guide.href = "https://www.haeundae.go.kr/tour/index.do?menuCd=DOM_000000302002002000";
+      guide.href = localGuide.url;
       guide.target = "_blank";
       guide.rel = "noreferrer";
-      guide.innerHTML = `<img src="./beaches/${photoName}" alt="${beachTitle} 전경"><small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>`;
+      guide.innerHTML = `<img src="./beaches/${photoName}" alt="${beachTitle} 전경"><small>${localGuide.note}</small>`;
       title.insertAdjacentElement("afterend", guide);
       return;
     }
