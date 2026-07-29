@@ -101,10 +101,33 @@ function addLodgingList() {
   });
 }
 
-new MutationObserver(() => { addHaeundaeGuide(); addRestaurantList(); addLodgingList(); }).observe(document.querySelector("#app"), { childList: true, subtree: true });
+function addCafeList() {
+  const card = document.querySelector(".detail");
+  const cafeData = {
+    "송정해수욕장": [["할리스 부산송정점", "해변 바로 앞, 오션뷰"], ["투썸플레이스 부산송정힐스점", "넓은 좌석, 해변 전망"], ["하삼동커피 송정점", "저렴한 가격, 테이크아웃"], ["카페리프", "송정 바다 전망"], ["인얼스커피 송정점", "커피와 디저트"], ["드래그하우스", "조용하고 감성적인 분위기"], ["더레스트마린", "대형 루프탑 오션뷰"]],
+    "해운대해수욕장": [["파노라마 라운지 웨스틴조선 부산", "고급스러운 해변 전망"], ["스타벅스 해운대점", "접근성이 좋고 이용이 편리함"], ["랑데자뷰 해운대점", "제주풍 인테리어"], ["산리오 러버스 클럽 해운대점", "캐릭터 테마 카페"], ["코오리마찌 해운대해리단길점", "당고와 일본풍 디저트"], ["로우앤스윗 해리단길점", "에스프레소와 베이커리"], ["엣지993", "루프탑 오션뷰"]],
+    "광안리해수욕장": [["차선책", "광안대교 전망, 저당 디저트"], ["컵앤컵", "루프탑, 광안대교 전망"], ["워킹홀리데이", "해변 바로 앞 오션뷰"], ["샌디스", "케이크, 통창 바다 전망"], ["별침대", "독특한 좌석과 야경"], ["카페이플", "제철 과일 디저트, 조용한 공간"], ["카페오뜨 광안비치점", "광안대교 전망"]],
+  };
+  const title = card?.querySelector("h2")?.textContent.trim();
+  if (!card || card.querySelector(".cafe-tag") || !cafeData[title]) return;
+  const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("카페"));
+  if (!tag) return;
+  tag.classList.add("cafe-tag");
+  tag.addEventListener("click", () => {
+    document.querySelector(".cafe-modal-backdrop")?.remove();
+    const modal = document.createElement("div");
+    modal.className = "cafe-modal-backdrop";
+    modal.innerHTML = `<section class="cafe-modal" role="dialog" aria-modal="true" aria-label="${title} 카페 추천"><button class="cafe-close" aria-label="카페 목록 닫기">×</button><p>BEACH CAFE PICK</p><h3>${title.replace("해수욕장", "")} 카페 추천</h3>${cafeData[title].map(([name, note]) => `<article><strong>${name}</strong><small>${note}</small></article>`).join("")}</section>`;
+    modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".cafe-close")) modal.remove(); });
+    document.body.appendChild(modal);
+  });
+}
+
+new MutationObserver(() => { addHaeundaeGuide(); addRestaurantList(); addLodgingList(); addCafeList(); }).observe(document.querySelector("#app"), { childList: true, subtree: true });
 addHaeundaeGuide();
 addRestaurantList();
 addLodgingList();
+addCafeList();
 
 document.addEventListener("click", (event) => {
   const tag = event.target.closest(".tags span");
@@ -123,7 +146,7 @@ document.addEventListener("click", (event) => {
 function markInteractiveFacilities() {
   document.querySelectorAll(".detail .tags span").forEach((tag) => {
     const label = tag.textContent;
-    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74");
+    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74") || label.includes("\uCE74\uD398");
     if (!isPopup) return;
     tag.classList.add("interactive-facility");
     tag.setAttribute("role", "button");
@@ -197,7 +220,7 @@ new MutationObserver(() => {
   const pass = document.querySelector(".cable-modal .cable-wide");
   if (!pass || pass.classList.contains("cable-pass")) return;
   pass.classList.add("cable-pass");
-  pass.innerHTML = "<strong>\uC790\uC720\uC774\uC6A9\uAD8C</strong><span><b>\uB300\uC778</b>35,000\uC6D0</span><span><b>\uC18C\uC778</b>30,000\uC6D0</span><small>\uC6D0\uD558\uB294 \uCE90\uBE48\uC744 \uD558\uB8E8 \uB3D9\uC548 \uBB34\uC81C\uD55C \uD0D1\uC2B9 \u00B7 \uD3C9\uC77C \uC804\uC6A9</small>";
+  pass.innerHTML = "<strong>\uC790\uC720\uC774\uC6A9\uAD8C</strong><span>35,000\uC6D0</span><span>30,000\uC6D0</span><small>\uC6D0\uD558\uB294 \uCE90\uBE48\uC744 \uD558\uB8E8 \uB3D9\uC548 \uBB34\uC81C\uD55C \uD0D1\uC2B9 \u00B7 \uD3C9\uC77C \uC804\uC6A9</small>";
 }).observe(document.body, { childList: true, subtree: true });
 
 // 필터를 버튼의 실제 선택 결과에 맞춰 명시적으로 다시 적용한다.
