@@ -101,11 +101,11 @@ function addFontSizeControl() {
   const control = document.createElement("div");
   control.className = "font-size-control";
   control.setAttribute("aria-label", "글씨 크기 조절");
-  control.innerHTML = '<button type="button" data-size="down" aria-label="글씨 작게">가−</button><span>글씨</span><button type="button" data-size="up" aria-label="글씨 크게">가+</button>';
+  control.innerHTML = '<button type="button" data-size="down" aria-label="글씨 작게">가−</button><button type="button" data-size="reset" aria-label="기본 글씨 크기">기본</button><button type="button" data-size="up" aria-label="글씨 크게">가+</button>';
   control.addEventListener("click", (event) => {
     const direction = event.target.closest("button")?.dataset.size;
     if (!direction) return;
-    fontScale = Math.min(1.3, Math.max(0.9, Number((fontScale + (direction === "up" ? 0.1 : -0.1)).toFixed(1))));
+    fontScale = direction === "reset" ? 1 : Math.min(1.3, Math.max(0.9, Number((fontScale + (direction === "up" ? 0.1 : -0.1)).toFixed(1))));
     applyFontScale();
   });
   document.body.appendChild(control);
