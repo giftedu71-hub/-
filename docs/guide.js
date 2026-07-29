@@ -241,6 +241,8 @@ function initBusanMap() {
     map.flyTo([35.158, 129.105], 11, { duration: 0.7 });
     const layout = mapElement.closest(".map-layout");
     layout?.classList.add("all-beaches");
+    const customToggle = document.querySelector(".custom-marker-toggle");
+    if (customToggle && layout && customToggle.parentElement !== layout) layout.appendChild(customToggle);
     window.setTimeout(() => map.invalidateSize(), 0);
     document.querySelectorAll(".beach-quick-selector button").forEach((button) => button.classList.toggle("active", button.dataset.key === "all"));
   };
