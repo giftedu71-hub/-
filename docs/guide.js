@@ -74,6 +74,16 @@ function addRestaurantList() {
       link.textContent = nameElement.textContent;
       nameElement.replaceWith(link);
     });
+    modal.querySelectorAll("article").forEach((article) => {
+      const name = article.querySelector("strong, .restaurant-link")?.textContent;
+      if (!name) return;
+      const button = document.createElement("button");
+      button.className = "restaurant-map-button";
+      button.type = "button";
+      button.textContent = "지도 표시";
+      button.addEventListener("click", () => window.showRestaurantOnMap?.(name));
+      article.appendChild(button);
+    });
     modal.querySelectorAll(".restaurant-filters button").forEach((button) => button.addEventListener("click", () => {
       const filter = button.dataset.filter;
       modal.querySelectorAll(".restaurant-filters button").forEach((item) => item.classList.toggle("selected", item === button));
@@ -186,6 +196,8 @@ function initBusanMap() {
   mapElement.classList.add("actual-map");
   mapElement.innerHTML = "";
   const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView([35.158, 129.105], 11);
+  window.busanLeafletMap = map;
+  window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
@@ -212,8 +224,43 @@ function initBusanMap() {
   window.setTimeout(() => map.invalidateSize(), 0);
 }
 
+window.clearRestaurantMarkers = () => {
+  window.restaurantMarkerLayer?.clearLayers();
+};
+
+window.showRestaurantOnMap = async (name) => {
+  const map = window.busanLeafletMap;
+  const layer = window.restaurantMarkerLayer;
+  if (!map || !layer) return;
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=ko&q=${encodeURIComponent(`${name} 부산광역시`)}`);
+    const places = await response.json();
+    if (!places[0]) throw new Error("not found");
+    const location = [Number(places[0].lat), Number(places[0].lon)];
+    layer.clearLayers();
+    window.L.marker(location).addTo(layer).bindPopup(`<strong>${name}</strong>`).openPopup();
+    map.flyTo(location, 16, { duration: 0.8 });
+    document.querySelector(".restaurant-modal-backdrop")?.remove();
+  } catch {
+    window.alert("지도에서 위치를 찾지 못했어요. 음식점 이름을 다시 확인해 주세요.");
+  }
+};
+
+function addRestaurantMarkerClear() {
+  const actions = document.querySelector(".map-actions");
+  if (!actions || actions.querySelector(".restaurant-marker-clear")) return;
+  const button = document.createElement("button");
+  button.className = "ghost restaurant-marker-clear";
+  button.type = "button";
+  button.textContent = "표시한 음식점 지우기";
+  button.addEventListener("click", () => window.clearRestaurantMarkers?.());
+  actions.prepend(button);
+}
+
 new MutationObserver(initBusanMap).observe(document.querySelector("#app"), { childList: true, subtree: true });
 initBusanMap();
+new MutationObserver(addRestaurantMarkerClear).observe(document.querySelector("#app"), { childList: true, subtree: true });
+addRestaurantMarkerClear();
 
 // 자유이용권도 요금표와 같이 대인과 소인 금액을 나누어 보여 준다.
 new MutationObserver(() => {
