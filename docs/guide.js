@@ -368,15 +368,15 @@ function addRestaurantMarkerClear() {
 }
 
 function addCustomMarkerToggle() {
-  const layout = document.querySelector(".map-layout");
-  if (!layout || layout.querySelector(".custom-marker-toggle")) return;
+  const panel = document.querySelector(".map-panel");
+  if (!panel || panel.querySelector(".custom-marker-toggle")) return;
   const button = document.createElement("button");
   button.className = "ghost custom-marker-toggle";
   button.type = "button";
   button.textContent = "직접 마킹";
   button.title = "버튼을 누른 뒤 지도 위치를 클릭하면 내 마커가 추가됩니다.";
   button.addEventListener("click", () => window.toggleCustomMarking?.());
-  layout.appendChild(button);
+  panel.appendChild(button);
 }
 
 function addBeachQuickSelector() {
