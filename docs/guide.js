@@ -84,8 +84,9 @@ function addRestaurantList() {
       const button = document.createElement("button");
       button.className = "restaurant-map-button";
       button.type = "button";
-      button.textContent = "지도 표시";
-      button.addEventListener("click", () => window.showRestaurantOnMap?.(name));
+      button.dataset.restaurantName = name;
+      button.textContent = window.restaurantMarkers?.has(name) ? "표시삭제" : "지도 표시";
+      button.addEventListener("click", () => window.toggleRestaurantMarker?.(name, button));
       article.appendChild(button);
     });
     modal.querySelectorAll(".restaurant-filters button").forEach((button) => button.addEventListener("click", () => {
@@ -218,6 +219,7 @@ function initBusanMap() {
   const map = window.L.map(mapElement, { scrollWheelZoom: true }).setView([35.158, 129.105], 11);
   window.busanLeafletMap = map;
   window.restaurantMarkerLayer = window.L.layerGroup().addTo(map);
+  window.restaurantMarkers = new Map();
   window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap contributors",
@@ -246,23 +248,36 @@ function initBusanMap() {
 
 window.clearRestaurantMarkers = () => {
   window.restaurantMarkerLayer?.clearLayers();
+  window.restaurantMarkers?.clear();
+  document.querySelectorAll(".restaurant-map-button").forEach((button) => { button.textContent = "지도 표시"; });
 };
 
-window.showRestaurantOnMap = async (name) => {
+window.toggleRestaurantMarker = async (name, button) => {
   const map = window.busanLeafletMap;
   const layer = window.restaurantMarkerLayer;
   if (!map || !layer) return;
+  if (window.restaurantMarkers?.has(name)) {
+    layer.removeLayer(window.restaurantMarkers.get(name));
+    window.restaurantMarkers.delete(name);
+    button.textContent = "지도 표시";
+    return;
+  }
   try {
+    button.disabled = true;
+    button.textContent = "표시 중";
     const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&accept-language=ko&q=${encodeURIComponent(`${name} 부산광역시`)}`);
     const places = await response.json();
     if (!places[0]) throw new Error("not found");
     const location = [Number(places[0].lat), Number(places[0].lon)];
-    layer.clearLayers();
-    window.L.marker(location).addTo(layer).bindPopup(`<strong>${name}</strong>`).openPopup();
+    const marker = window.L.marker(location).addTo(layer).bindPopup(`<strong>${name}</strong>`).openPopup();
+    window.restaurantMarkers.set(name, marker);
     map.flyTo(location, 16, { duration: 0.8 });
-    document.querySelector(".restaurant-modal-backdrop")?.remove();
+    button.textContent = "표시삭제";
   } catch {
-    window.alert("지도에서 위치를 찾지 못했어요. 음식점 이름을 다시 확인해 주세요.");
+    button.textContent = "지도 표시";
+    window.alert("지도에서 위치를 찾지 못했어요. 정확한 도로명 주소 또는 위도·경도를 알려주시면 고정 마커로 추가할 수 있어요.");
+  } finally {
+    button.disabled = false;
   }
 };
 
