@@ -208,11 +208,24 @@ document.addEventListener("click", (event) => {
   document.body.appendChild(modal);
 });
 
+document.addEventListener("click", (event) => {
+  const tag = event.target.closest(".tags span");
+  const title = document.querySelector(".detail h2")?.textContent.trim();
+  if (!tag || !tag.textContent.includes("산책") || title !== "다대포해수욕장") return;
+  document.querySelector(".walk-modal-backdrop")?.remove();
+  const modal = document.createElement("div");
+  modal.className = "walk-modal-backdrop";
+  modal.innerHTML = `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong></article></section>`;
+  modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".walk-close")) modal.remove(); });
+  document.body.appendChild(modal);
+});
+
 // Pop-up으로 열리는 주변 시설은 보기만 한 태그와 다르게 표시한다.
 function markInteractiveFacilities() {
+  const title = document.querySelector(".detail h2")?.textContent.trim();
   document.querySelectorAll(".detail .tags span").forEach((tag) => {
     const label = tag.textContent;
-    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74") || label.includes("\uCE74\uD398");
+    const isPopup = label.includes("\uB9DB\uC9D1") || label.includes("\uC219\uBC15") || label.includes("\uCF00\uC774\uBE14\uCE74") || label.includes("\uCE74\uD398") || (title === "다대포해수욕장" && label.includes("산책"));
     if (!isPopup) return;
     tag.classList.add("interactive-facility");
     tag.setAttribute("role", "button");
