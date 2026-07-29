@@ -99,3 +99,15 @@ document.addEventListener("click", (event) => {
   modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".lodging-close")) modal.remove(); });
   document.body.appendChild(modal);
 });
+
+document.addEventListener("click", (event) => {
+  const tag = event.target.closest(".tags span");
+  const title = document.querySelector(".detail h2")?.textContent.trim();
+  if (!tag || !tag.textContent.includes("케이블카") || title !== "송도해수욕장") return;
+  document.querySelector(".cable-modal-backdrop")?.remove();
+  const modal = document.createElement("div");
+  modal.className = "cable-modal-backdrop";
+  modal.innerHTML = `<section class="cable-modal" role="dialog" aria-modal="true" aria-label="송도 해상케이블카 요금"><button class="cable-close" aria-label="케이블카 요금표 닫기">×</button><p>SONGDO CABLE CAR</p><h3>케이블카 요금 안내</h3><div class="cable-table"><div class="cable-head"><span>상품</span><span>대인</span><span>소인</span></div><div><strong>크리스탈크루즈<br><small>(크리스탈캐빈) · 왕복</small></strong><span>24,000원</span><span>18,000원</span></div><div><strong>크리스탈크루즈<br><small>(크리스탈캐빈) · 편도</small></strong><span>19,000원</span><span>15,000원</span></div><div><strong>에어크루즈<br><small>(일반캐빈) · 왕복</small></strong><span>19,000원</span><span>14,000원</span></div><div><strong>에어크루즈<br><small>(일반캐빈) · 편도</small></strong><span>15,000원</span><span>12,000원</span></div></div><article class="cable-wide"><strong>자유이용권</strong><span>35,000원 / 30,000원</span><small>원하는 캐빈을 하루 동안 무제한 탑승 · 평일 전용</small></article><article class="cable-wide"><strong>스피디크루즈</strong><span>크리스탈 55,000원 / 에어 45,000원</span><small>대기 없이 탑승 · 1인당 요금</small></article><article class="cable-wide"><strong>프리미엄크루즈</strong><span>크리스탈 340,000원 / 에어 270,000원</span><small>대기 없이 탑승 · 캐빈 1대당(최대 8명)</small></article></section>`;
+  modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".cable-close")) modal.remove(); });
+  document.body.appendChild(modal);
+});
