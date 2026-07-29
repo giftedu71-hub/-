@@ -147,7 +147,13 @@ function initBusanMap() {
     ["quiet", "임랑·일광", 35.2900, 129.2520],
   ];
   beaches.forEach(([key, name, lat, lng]) => {
-    const marker = window.L.marker([lat, lng]).addTo(map).bindTooltip(name, { direction: "top", offset: [0, -28] });
+    const icon = window.L.divIcon({
+      className: "beach-map-marker-wrap",
+      html: `<span class="beach-map-pin"></span><span class="beach-map-label">${name}</span>`,
+      iconSize: [92, 47],
+      iconAnchor: [46, 44],
+    });
+    const marker = window.L.marker([lat, lng], { icon }).addTo(map);
     marker.on("click", () => window.pick(key));
   });
   window.setTimeout(() => map.invalidateSize(), 0);
