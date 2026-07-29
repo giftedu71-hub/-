@@ -124,6 +124,18 @@ function markInteractiveFacilities() {
 new MutationObserver(markInteractiveFacilities).observe(document.querySelector("#app"), { childList: true, subtree: true });
 markInteractiveFacilities();
 
+function addFacilityHint() {
+  const tags = document.querySelector(".detail .row.facility .tags");
+  if (!tags || tags.parentElement?.querySelector(".facility-hint")) return;
+  const hint = document.createElement("small");
+  hint.className = "facility-hint";
+  hint.textContent = "(색있는 카테고리를 클릭해보세요)";
+  tags.insertAdjacentElement("afterend", hint);
+}
+
+new MutationObserver(addFacilityHint).observe(document.querySelector("#app"), { childList: true, subtree: true });
+addFacilityHint();
+
 // OpenStreetMap 타일을 사용하는 실제 부산 지도
 function initBusanMap() {
   const mapElement = document.querySelector(".busan-map");
