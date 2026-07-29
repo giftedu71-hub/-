@@ -498,7 +498,18 @@ export default function Home() {
                     <small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>
                   </a>
                 )}
-                {activeMapBeach.key !== "haeundae" && activeMapBeach.guideImage && (
+                {activeMapBeach.key === "gwangalli" && (
+                  <a
+                    className="haeundae-guide"
+                    href="https://www.suyeong.go.kr/tour/index.suyeong?menuCd=DOM_000001102002004000"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <img src={activeMapBeach.guideImage} alt="광안리해수욕장 전경" />
+                    <small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>
+                  </a>
+                )}
+                {activeMapBeach.key !== "haeundae" && activeMapBeach.key !== "gwangalli" && activeMapBeach.guideImage && (
                   <figure className="beach-guide-photo">
                     <img src={activeMapBeach.guideImage} alt={`${activeMapBeach.title} 전경`} />
                   </figure>
