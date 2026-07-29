@@ -63,6 +63,10 @@ function addRestaurantList() {
     modal.className = "restaurant-modal-backdrop";
     const categoryCodes = { "한식": "korean", "양식": "western", "일식": "japanese", "중식": "chinese", "기타": "other" };
     modal.innerHTML = `<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="${title} 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>BEACH FOOD PICK</p><h3>${title.replace("해수욕장", "")} 맛집 추천</h3><div class="restaurant-filters"><button class="selected" data-filter="all">전체</button><button data-filter="korean">한식</button><button data-filter="western">양식</button><button data-filter="japanese">일식</button><button data-filter="chinese">중식</button><button data-filter="other">기타</button></div>${restaurantData[title].map(([name, category, menu]) => `<article data-category="${categoryCodes[category]}"><strong>${name}</strong><span>${category}</span><small>${menu || ""}</small></article>`).join("")}</section>`;
+    const restaurantHint = document.createElement("small");
+    restaurantHint.className = "restaurant-link-hint";
+    restaurantHint.textContent = "음식점 이름을 클릭하면 네이버 지도에서 확인할 수 있어요.";
+    modal.querySelector(".restaurant-modal h3")?.insertAdjacentElement("afterend", restaurantHint);
     modal.querySelectorAll("article strong").forEach((nameElement) => {
       const url = restaurantLinks[nameElement.textContent];
       if (!url) return;
@@ -118,6 +122,11 @@ function addCafeList() {
     "해운대해수욕장": [["파노라마 라운지 웨스틴조선 부산", "고급스러운 해변 전망"], ["스타벅스 해운대점", "접근성이 좋고 이용이 편리함"], ["랑데자뷰 해운대점", "제주풍 인테리어"], ["산리오 러버스 클럽 해운대점", "캐릭터 테마 카페"], ["코오리마찌 해운대해리단길점", "당고와 일본풍 디저트"], ["로우앤스윗 해리단길점", "에스프레소와 베이커리"], ["엣지993", "루프탑 오션뷰"]],
     "광안리해수욕장": [["차선책", "광안대교 전망, 저당 디저트"], ["컵앤컵", "루프탑, 광안대교 전망"], ["워킹홀리데이", "해변 바로 앞 오션뷰"], ["샌디스", "케이크, 통창 바다 전망"], ["별침대", "독특한 좌석과 야경"], ["카페이플", "제철 과일 디저트, 조용한 공간"], ["카페오뜨 광안비치점", "광안대교 전망"]],
   };
+  const cafeLinks = {
+    "할리스 부산송정점": "https://map.naver.com/p/search/할리스%20부산송정점", "투썸플레이스 부산송정힐스점": "https://map.naver.com/p/search/투썸플레이스%20부산송정힐스점", "하삼동커피 송정점": "https://map.naver.com/p/search/하삼동커피%20송정점%20부산", "카페리프": "https://map.naver.com/p/search/카페리프%20송정%20부산", "인얼스커피 송정점": "https://map.naver.com/p/search/인얼스커피%20송정점", "드래그하우스": "https://map.naver.com/p/search/드래그하우스%20송정%20부산", "더레스트마린": "https://map.naver.com/p/search/더레스트마린%20송정",
+    "파노라마 라운지 웨스틴조선 부산": "https://map.naver.com/p/search/파노라마라운지%20웨스틴조선%20부산", "스타벅스 해운대점": "https://map.naver.com/p/search/스타벅스%20해운대점", "랑데자뷰 해운대점": "https://map.naver.com/p/search/랑데자뷰%20해운대점", "산리오 러버스 클럽 해운대점": "https://map.naver.com/p/search/산리오러버스클럽%20해운대점", "코오리마찌 해운대해리단길점": "https://map.naver.com/p/search/코오리마찌%20해운대해리단길점", "로우앤스윗 해리단길점": "https://map.naver.com/p/search/로우앤스윗%20해리단길점", "엣지993": "https://map.naver.com/p/search/엣지993%20해운대",
+    "차선책": "https://map.naver.com/p/search/차선책%20광안리", "컵앤컵": "https://map.naver.com/p/search/컵앤컵%20광안리", "워킹홀리데이": "https://map.naver.com/p/search/워킹홀리데이%20광안리", "샌디스": "https://map.naver.com/p/search/샌디스%20광안리", "별침대": "https://map.naver.com/p/search/별침대%20광안리", "카페이플": "https://map.naver.com/p/search/카페이플%20광안리", "카페오뜨 광안비치점": "https://map.naver.com/p/search/카페오뜨%20광안비치점",
+  };
   const title = card?.querySelector("h2")?.textContent.trim();
   if (!card || card.querySelector(".cafe-tag") || !cafeData[title]) return;
   const tag = [...card.querySelectorAll(".tags span")].find((item) => item.textContent.includes("카페"));
@@ -128,6 +137,17 @@ function addCafeList() {
     const modal = document.createElement("div");
     modal.className = "cafe-modal-backdrop";
     modal.innerHTML = `<section class="cafe-modal" role="dialog" aria-modal="true" aria-label="${title} 카페 추천"><button class="cafe-close" aria-label="카페 목록 닫기">×</button><p>BEACH CAFE PICK</p><h3>${title.replace("해수욕장", "")} 카페 추천</h3>${cafeData[title].map(([name, note]) => `<article><strong>${name}</strong><small>${note}</small></article>`).join("")}</section>`;
+    modal.querySelectorAll("article strong").forEach((nameElement) => {
+      const url = cafeLinks[nameElement.textContent];
+      if (!url) return;
+      const link = document.createElement("a");
+      link.className = "cafe-link";
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = nameElement.textContent;
+      nameElement.replaceWith(link);
+    });
     modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".cafe-close")) modal.remove(); });
     document.body.appendChild(modal);
   });
