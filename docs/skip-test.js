@@ -8,7 +8,8 @@ const quickTypes = [
 ];
 
 function renderQuickPicker() {
-  app.innerHTML = head() + `<section class="quick-picker"><p class="eyebrow">SKIP THE TEST</p><h1>궁금한 유형을<br>직접 골라보세요</h1><p>원하는 유형을 누르면 결과와 상세 정보를 바로 볼 수 있어요.</p><div class="quick-grid">${quickTypes.map(([key, name]) => `<button onclick="showQuickType('${key}')"><span class="quick-animal ${key}"></span><strong>${name}</strong><small>${beaches[key].beach}</small></button>`).join("")}</div><button class="primary quick-map" onclick="showQuickMap()">바다 보러가기 →</button></section>`;
+  const returnButton = window.returnToOriginalAvailable ? '<button class="ghost quick-return" onclick="backToMyResult()">내 결과로 돌아가기</button>' : "";
+  app.innerHTML = head() + `<section class="quick-picker"><p class="eyebrow">SKIP THE TEST</p><h1>궁금한 유형을<br>직접 골라보세요</h1><p>원하는 유형을 누르면 결과와 상세 정보를 바로 볼 수 있어요.</p><div class="quick-grid">${quickTypes.map(([key, name]) => `<button onclick="showQuickType('${key}')"><span class="quick-animal ${key}"></span><strong>${name}</strong><small>${beaches[key].beach}</small></button>`).join("")}</div><button class="primary quick-map" onclick="showQuickMap()">바다 보러가기 →</button>${returnButton}</section>`;
 }
 
 window.showQuickType = (key, fromRelation = false) => {
@@ -82,12 +83,24 @@ function addSkipButton() {
   button.className = "skip-test";
   button.type = "button";
   button.textContent = "테스트 건너뛰기";
-  button.addEventListener("click", () => {
+  button.addEventListener("click", showSkipConfirmation);
+  actions.insertAdjacentElement("afterend", button);
+}
+
+function showSkipConfirmation() {
+  document.querySelector(".skip-confirm-backdrop")?.remove();
+  const dialog = document.createElement("div");
+  dialog.className = "skip-confirm-backdrop";
+  dialog.innerHTML = '<section class="skip-confirm" role="dialog" aria-modal="true" aria-label="테스트 건너뛰기 확인"><p>TEST SKIP</p><h3>테스트를 건너뛰시겠습니까?</h3><span>유형을 직접 골라 결과를 확인할 수 있어요.</span><div><button type="button" class="ghost skip-no">아니요</button><button type="button" class="primary skip-yes">예</button></div></section>';
+  dialog.querySelector(".skip-no")?.addEventListener("click", () => dialog.remove());
+  dialog.querySelector(".skip-yes")?.addEventListener("click", () => {
     window.hasTestResult = false;
     window.returnToOriginalAvailable = false;
+    dialog.remove();
     renderQuickPicker();
   });
-  actions.insertAdjacentElement("afterend", button);
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.remove(); });
+  document.body.appendChild(dialog);
 }
 
 new MutationObserver(() => { addSkipButton(); addQuickBackButton(); addMyResultButton(); }).observe(app, { childList: true, subtree: true });
