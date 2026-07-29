@@ -14,7 +14,7 @@ function renderQuickPicker() {
 window.showQuickType = (key, fromRelation = false) => {
   const type = quickTypes.find(([itemKey]) => itemKey === key);
   if (fromRelation && !window.relatedTypeViewing) window.myResultAnswers = [...a];
-  window.relatedTypeViewing = fromRelation;
+  window.relatedTypeViewing = fromRelation || Boolean(window.browsingTypesFromResult);
   a = type[2];
   window.quickViewing = true;
   screen = "result";
@@ -30,6 +30,8 @@ window.showQuickMap = () => {
 };
 
 window.backToQuickTypes = () => {
+  if (!window.myResultAnswers && screen === "result" && !window.quickViewing) window.myResultAnswers = [...a];
+  if (window.myResultAnswers) window.browsingTypesFromResult = true;
   window.quickViewing = false;
   window.relatedTypeViewing = false;
   renderQuickPicker();
@@ -39,6 +41,7 @@ window.backToMyResult = () => {
   if (!window.myResultAnswers) return;
   a = [...window.myResultAnswers];
   window.relatedTypeViewing = false;
+  window.browsingTypesFromResult = false;
   window.quickViewing = false;
   screen = "result";
   render();
@@ -80,7 +83,12 @@ function addSkipButton() {
 
 new MutationObserver(() => { addSkipButton(); addQuickBackButton(); addMyResultButton(); }).observe(app, { childList: true, subtree: true });
 document.addEventListener("click", (event) => {
-  if (event.target.closest("button")?.textContent.trim() === "다시 하기") window.quickViewing = false;
+  if (event.target.closest("button")?.textContent.trim() === "다시 하기") {
+    window.quickViewing = false;
+    window.relatedTypeViewing = false;
+    window.browsingTypesFromResult = false;
+    window.myResultAnswers = null;
+  }
 });
 addSkipButton();
 addMyResultButton();
