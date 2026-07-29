@@ -1032,12 +1032,14 @@ button:focus-visible,
   white-space: nowrap;
 }
 
-.restaurant-list { margin-top: 14px; padding: 13px; border: 1px solid #dfeae5; border-radius: 12px; background: white; }
-.restaurant-list h3 { margin: 0 0 8px; font-size: 13px; }
-.restaurant-list article { display: flex; padding: 8px 0; border-top: 1px solid #edf2ef; align-items: center; justify-content: space-between; gap: 8px; }
-.restaurant-list article strong { font-size: 11px; }
-.restaurant-list article span,.restaurant-list > p { color: #718788; font-size: 9px; }
-.restaurant-list > p { margin: 8px 0 0; }
+.restaurant-modal-backdrop { position: fixed; z-index: 30; inset: 0; display: grid; padding: 24px; background: rgba(20, 58, 67, 0.38); place-items: center; }
+.restaurant-modal { position: relative; width: min(360px, 100%); padding: 28px 24px 24px; border-radius: 18px; background: white; box-shadow: 0 22px 50px rgba(20,58,67,.25); }
+.restaurant-modal > p { margin: 0; color: var(--sea); font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+.restaurant-modal h3 { margin: 7px 0 13px; font-size: 22px; letter-spacing: -.04em; }
+.restaurant-modal article { display: flex; padding: 12px 0; border-top: 1px solid #edf2ef; align-items: center; justify-content: space-between; gap: 8px; }
+.restaurant-modal article strong { font-size: 13px; }
+.restaurant-modal article span { color: #718788; font-size: 11px; }
+.restaurant-close { position: absolute; top: 9px; right: 12px; color: #789092; border: 0; background: transparent; font-size: 25px; line-height: 1; }
 
 .night-view {
   margin: 16px 0 0;

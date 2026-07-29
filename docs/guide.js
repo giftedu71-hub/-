@@ -43,12 +43,12 @@ function addRestaurantList() {
   if (!tag) return;
   tag.classList.add("restaurant-tag");
   tag.addEventListener("click", () => {
-    const existing = card.querySelector(".restaurant-list");
-    if (existing) return existing.remove();
-    const list = document.createElement("section");
-    list.className = "restaurant-list";
-    list.innerHTML = '<h3>해운대 맛집 추천</h3><article><strong>해운대기와집대구탕</strong><span>🐟 대구탕 · 달맞이길</span></article><article><strong>금수복국 해운대본점</strong><span>🍲 복국 · 해운대 해변 인근</span></article><article><strong>이씨할매횟집</strong><span>🦪 회 · 미포항 인근</span></article><p>방문 전 영업시간과 휴무일을 확인해 주세요.</p>';
-    card.appendChild(list);
+    document.querySelector(".restaurant-modal-backdrop")?.remove();
+    const modal = document.createElement("div");
+    modal.className = "restaurant-modal-backdrop";
+    modal.innerHTML = '<section class="restaurant-modal" role="dialog" aria-modal="true" aria-label="해운대 맛집 추천"><button class="restaurant-close" aria-label="맛집 목록 닫기">×</button><p>HAEUNDAE FOOD PICK</p><h3>해운대 맛집 추천</h3><article><strong>신사꽃게탕</strong><span>한식</span></article><article><strong>전설의 우대갈비</strong><span>한식</span></article><article><strong>금수복국 해운대본점</strong><span>한식</span></article><article><strong>해운대암소갈비집</strong><span>한식</span></article></section>';
+    modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(".restaurant-close")) modal.remove(); });
+    document.body.appendChild(modal);
   });
 }
 
