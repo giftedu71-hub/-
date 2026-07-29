@@ -12,11 +12,22 @@ function addHaeundaeGuide() {
     "송정해수욕장": "songjeong-guide.jpg",
   };
 
-  const photoName = photoNames[title.textContent.trim()];
+  const beachTitle = title.textContent.trim();
+  const photoName = photoNames[beachTitle];
   if (photoName) {
+    if (beachTitle === "송정해수욕장") {
+      const guide = document.createElement("a");
+      guide.className = "haeundae-guide beach-guide";
+      guide.href = "https://www.haeundae.go.kr/tour/index.do?menuCd=DOM_000000302002002000";
+      guide.target = "_blank";
+      guide.rel = "noreferrer";
+      guide.innerHTML = `<img src="./beaches/${photoName}" alt="${beachTitle} 전경"><small>사진을 누르면 이용안내(개장시간, 피서용품·편의시설 가격 등)를 볼 수 있어요.</small>`;
+      title.insertAdjacentElement("afterend", guide);
+      return;
+    }
     const figure = document.createElement("figure");
     figure.className = "beach-guide beach-guide-photo";
-    figure.innerHTML = `<img src="./beaches/${photoName}" alt="${title.textContent.trim()} 전경">`;
+    figure.innerHTML = `<img src="./beaches/${photoName}" alt="${beachTitle} 전경">`;
     title.insertAdjacentElement("afterend", figure);
     return;
   }
