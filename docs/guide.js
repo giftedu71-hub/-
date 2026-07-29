@@ -215,7 +215,13 @@ document.addEventListener("click", (event) => {
   document.querySelector(".walk-modal-backdrop")?.remove();
   const modal = document.createElement("div");
   modal.className = "walk-modal-backdrop";
-  modal.innerHTML = title === "다대포해수욕장" ? `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong><small>4월 말부터 10월까지 정기적으로 펼쳐지는 화려한 분수쇼 (월요일은 휴무)</small></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방로"><strong>고우니 생태탐방로</strong><small>광활한 갈대밭, 갯벌 생태계, 그리고 아름다운 낙조(일몰)를 함께 즐길 수 있는 대표적인 친환경 명소</small></article></section>` : `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="임랑·일광 해수욕장 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>IMRANG · ILGWANG WALK PICK</p><h3>임랑·일광 산책 명소</h3><article class="walk-text"><img src="./beaches/imrang-breakwater-walk.jpg" alt="임랑해수욕장 방파제 산책로"><strong>임랑해수욕장 방파제 산책로</strong><small>임랑해수욕장 북쪽 끝, 물고기 모양의 등대가 있는 방파제 해안 산책로. 부산 갈맷길 1코스의 출발점입니다.</small></article><article class="walk-text"><img src="./beaches/ilgwang-coastal-deck.jpg" alt="일광해수욕장 해안 데크길"><strong>일광해수욕장 해안 데크길</strong><small>일광해수욕장 끝에서 조용한 어촌마을인 학리마을(학리방파제)까지 이어지는 약 1km 길이의 평탄한 해안산책로</small></article></section>`;
+  modal.innerHTML = title === "다대포해수욕장" ? `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="다대포 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>DADAEP0 WALK PICK</p><h3>다대포 산책 명소</h3><article><img src="./beaches/dadaepo-sunset-fountain.jpg" alt="다대포 낙조분수"><strong>낙조분수</strong><small>4월 말부터 10월까지 정기적으로 펼쳐지는 화려한 분수쇼 (월요일은 휴무)</small><button class="walk-map-button" type="button" data-marker-name="낙조분수">지도 표시</button></article><article><img src="./beaches/dadaepo-gouni-trail.jpg" alt="고우니 생태탐방길"><strong>고우니 생태탐방길</strong><small>광활한 갈대밭, 갯벌 생태계, 그리고 아름다운 낙조(일몰)를 함께 즐길 수 있는 대표적인 친환경 명소</small><button class="walk-map-button" type="button" data-marker-name="고우니 생태탐방길">지도 표시</button></article></section>` : `<section class="walk-modal" role="dialog" aria-modal="true" aria-label="임랑·일광 해수욕장 산책 명소"><button class="walk-close" aria-label="산책 명소 닫기">×</button><p>IMRANG · ILGWANG WALK PICK</p><h3>임랑·일광 산책 명소</h3><article class="walk-text"><img src="./beaches/imrang-breakwater-walk.jpg" alt="임랑해수욕장 방파제 산책로"><strong>임랑해수욕장 방파제 산책로</strong><small>임랑해수욕장 북쪽 끝, 물고기 모양의 등대가 있는 방파제 해안 산책로. 부산 갈맷길 1코스의 출발점입니다.</small><button class="walk-map-button" type="button" data-marker-name="임랑해수욕장 방파제 산책로">지도 표시</button></article><article class="walk-text"><img src="./beaches/ilgwang-coastal-deck.jpg" alt="일광해수욕장 해안 데크길"><strong>일광해수욕장 해안 데크길</strong><small>일광해수욕장 끝에서 조용한 어촌마을인 학리마을(학리방파제)까지 이어지는 약 1km 길이의 평탄한 해안산책로</small><button class="walk-map-button" type="button" data-marker-name="일광해수욕장 해안 데크길">지도 표시</button></article></section>`;
+  modal.querySelectorAll(".walk-map-button").forEach((button) => {
+    const name = button.dataset.markerName;
+    button.textContent = window.restaurantMarkers?.has(name) ? "표시삭제" : "지도 표시";
+    button.classList.toggle("is-active", window.restaurantMarkers?.has(name));
+    button.addEventListener("click", () => window.toggleRestaurantMarker?.(name, button));
+  });
   modal.addEventListener("click", (itemEvent) => { if (itemEvent.target === modal || itemEvent.target.closest(".walk-close")) modal.remove(); });
   document.body.appendChild(modal);
 });
@@ -432,6 +438,7 @@ const fixedPlaceAddresses = {
   "할리스 부산송정점": "부산광역시 해운대구 송정동 443-5", "투썸플레이스 부산송정힐스점": "부산광역시 해운대구 송정동 446-2", "하삼동커피 송정점": "부산광역시 해운대구 송정중앙로 23", "카페리프": "부산광역시 해운대구 송정동 297-17", "인얼스커피 송정점": "부산광역시 해운대구 송정동 436-4", "드래그하우스": "부산광역시 해운대구 송정동 442-3", "더레스트마린": "부산광역시 해운대구 송정동 288-61",
   "파노라마 라운지 웨스틴조선 부산": "부산광역시 해운대구 동백로 67 웨스틴 조선 부산 1층", "스타벅스 해운대점": "부산광역시 해운대구 구남로 49", "옵스 해운대점": "부산광역시 해운대구 해운대해변로 265", "산리오 러버스 클럽 해운대점": "부산광역시 해운대구 우동1로 56-4", "로우앤스윗 해리단길점": "부산광역시 해운대구 우동1로38번가길 1", "엣지993": "부산광역시 해운대구 달맞이길62번길 78",
   "차선책": "부산광역시 수영구 광안해변로 237 3층", "컵앤컵": "부산광역시 수영구 광안해변로 177 4층", "워킹홀리데이": "부산광역시 수영구 광안해변로 235 3층", "샌디스": "부산광역시 수영구 광안해변로 201", "별침대": "부산광역시 수영구 광안해변로 203", "카페오뜨 광안비치점": "부산광역시 수영구 광안해변로 209",
+  "낙조분수": "부산광역시 사하구 다대동 다대포 낙조분수", "고우니 생태탐방길": "부산광역시 사하구 다대동 고우니 생태탐방길", "임랑해수욕장 방파제 산책로": "부산광역시 기장군 장안읍 임랑리 임랑해수욕장", "일광해수욕장 해안 데크길": "부산광역시 기장군 일광읍 일광리 일광해수욕장",
 };
 
 const fixedPlaceCoordinates = {
@@ -441,6 +448,7 @@ const fixedPlaceCoordinates = {
   "할리스 부산송정점": [35.18076, 129.19986], "투썸플레이스 부산송정힐스점": [35.18132, 129.20013], "하삼동커피 송정점": [35.1829854, 129.2028381], "카페리프": [35.180837511596394, 129.20290904526888], "인얼스커피 송정점": [35.17743219558118, 129.1971820139762], "드래그하우스": [35.18038, 129.19976], "더레스트마린": [35.17930525147386, 129.20512698996163], "언양불고기 부산집": [35.147998017155174, 129.11352613968913], "디에이블 광안점": [35.15328368556618, 129.12475429073945], "페로어페로 광안리점": [35.1482187139021, 129.1140907238066], "차선책": [35.15470351808011, 129.119943150911], "컵앤컵": [35.15047369470459, 129.11577998341534], "워킹홀리데이": [35.15475884265314, 129.11974734520334], "카페이플": [35.15018064436417, 129.1135149601854], "류센소 본점": [35.16157237536048, 129.15621690598704], "나마스테 해운대점": [35.160267455566796, 129.1604648571793],
   "파노라마 라운지 웨스틴조선 부산": [35.155938272597325, 129.15397116162632], "스타벅스 해운대점": [35.1616735, 129.1603502], "옵스 해운대점": [35.16277404319039, 129.1628559194935], "산리오 러버스 클럽 해운대점": [35.1636139, 129.1565233], "로우앤스윗 해리단길점": [35.165142159233696, 129.15811784268658], "엣지993": [35.1578569, 129.1723282],
   "샌디스": [35.1384781, 129.1129089], "별침대": [35.1557532, 129.1245832], "카페오뜨 광안비치점": [35.1557220, 129.1325461],
+  "고우니 생태탐방길": [35.05986605988532, 128.9782071004805],
 };
 
 window.toggleRestaurantMarker = async (name, button) => {
